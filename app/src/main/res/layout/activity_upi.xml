@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <EditText
+        android:id="@+id/upiIdField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter UPI ID"
+        android:textSize="18sp"
+        android:padding="10dp" />
+
+    <Button
+        android:id="@+id/verifyUpiButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Verify UPI ID"
+        />
+
+    <TextView
+        android:id="@+id/nameDisplay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        android:padding="10dp" />
+</LinearLayout>

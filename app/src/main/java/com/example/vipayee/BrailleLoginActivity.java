@@ -23,7 +23,8 @@ public class BrailleLoginActivity extends AppCompatActivity {
     private StringBuilder pin = new StringBuilder();
     private Handler handler = new Handler();
     private Runnable recognizeNumberRunnable;
-    private int digitCount = 0;  // To track digit entry progress
+    private int digitCount = 0; // To track digit entry progress
+    private static final String DEFAULT_PIN = "1234"; // Default login PIN
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +36,7 @@ public class BrailleLoginActivity extends AppCompatActivity {
         textToSpeech = new TextToSpeech(this, status -> {
             if (status == TextToSpeech.SUCCESS) {
                 textToSpeech.setLanguage(Locale.ENGLISH);
-                speakMessage("Enter your four digit login pin. Enter first digit.");
+                speakMessage("Enter your four digit login PIN. Enter first digit.");
             }
         });
 
@@ -78,8 +79,8 @@ public class BrailleLoginActivity extends AppCompatActivity {
             String number = getBrailleNumber(dot1Pressed, dot2Pressed, dot3Pressed, dot4Pressed);
 
             if (!number.isEmpty()) {
-                pin.append("● ");
-                pinDisplay.setText(pin.toString().trim());
+                pin.append(number);
+                pinDisplay.setText("● ".repeat(pin.length()).trim());
 
                 // Speak confirmation
                 digitCount++;
@@ -88,11 +89,11 @@ public class BrailleLoginActivity extends AppCompatActivity {
                 // Trigger vibration after every valid digit
                 triggerVibration();
 
-                // If all 4 digits are entered, proceed to the next page
-                if (digitCount < 4) {
-                    handler.postDelayed(() -> speakMessage("Enter digit " + (digitCount + 1) + "."), 1500);
+                // If all 4 digits are entered, verify PIN
+                if (digitCount == 4) {
+                    handler.postDelayed(this::authenticatePin, 1500);
                 } else {
-                    handler.postDelayed(this::goToNextPage, 1500);
+                    handler.postDelayed(() -> speakMessage("Enter digit " + (digitCount + 1) + "."), 1500);
                 }
             }
         }
@@ -100,10 +101,21 @@ public class BrailleLoginActivity extends AppCompatActivity {
         resetGrid();
     }
 
-    private void goToNextPage() {
-        speakMessage("Authentication successful. Moving to payment feature section.");
-        startActivity(new Intent(BrailleLoginActivity.this, OptionActivity.class));
-        finish();
+    private void authenticatePin() {
+        if (pin.toString().equals(DEFAULT_PIN)) {
+            speakMessage("Authentication successful. Moving to the payment feature section.");
+            handler.postDelayed(() -> {
+                startActivity(new Intent(BrailleLoginActivity.this, OptionActivity.class));
+                finish();
+            }, 2000);
+        } else {
+            // Wrong PIN - Reset and try again
+            speakMessage("Incorrect PIN. Please try again.");
+            pin.setLength(0); // Clear entered PIN
+            digitCount = 0;
+            handler.postDelayed(() -> speakMessage("Enter your four digit login PIN. Enter first digit."), 2000);
+            pinDisplay.setText("");
+        }
     }
 
     private String getBrailleNumber(boolean d1, boolean d2, boolean d3, boolean d4) {
@@ -119,7 +131,7 @@ public class BrailleLoginActivity extends AppCompatActivity {
             case "1111": return "7";
             case "1101": return "8";
             case "0110": return "9";
-            case "0101": return "0";
+            case "0111": return "0";
             default: return "";
         }
     }

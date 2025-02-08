@@ -4,23 +4,25 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.view.MotionEvent;
+
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
+public class PaymentOptionActivity extends AppCompatActivity {
 
-    private float x1, x2;
+    float x1,x2;
     private TextToSpeech textToSpeech;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_payement_option);
 
         // Initialize Text-to-Speech
         textToSpeech = new TextToSpeech(this, status -> {
@@ -29,16 +31,10 @@ public class MainActivity extends AppCompatActivity {
                 speakInstructions();
             }
         });
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
     }
 
     private void speakInstructions() {
-        String message = "Welcome to Visual Pay. Swipe left to go to the registration. Swipe right to open Login process.";
+        String message = "Make Transaction here. Swipe Right for Scan the QR.";
         textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
     }
 
@@ -50,28 +46,22 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case MotionEvent.ACTION_UP:
                 x2 = motionEvent.getX();
-//Left slide
+
+
+                //Left slide
                 if (x1 < x2) {
-                    textToSpeech.speak("Opening registration section.", TextToSpeech.QUEUE_FLUSH, null, null);
-                    Intent i = new Intent(MainActivity.this, RegisterActivity.class);
+                    textToSpeech.speak("Opening the QR Scan Page.", TextToSpeech.QUEUE_FLUSH, null, null);
+                    Intent i = new Intent(PaymentOptionActivity.this, QRScanActivity.class);
                     startActivity(i);
 //                    Right Slide
                 } else if (x1 > x2) {
-                    textToSpeech.speak("Opening Login process section.", TextToSpeech.QUEUE_FLUSH, null, null);
-                    Intent i = new Intent(MainActivity.this, TapOptionActivity.class);
+                    textToSpeech.speak("Opening the pay by number.", TextToSpeech.QUEUE_FLUSH, null, null);
+                    Intent i = new Intent(PaymentOptionActivity.this, UPIActivity.class);
                     startActivity(i);
                 }
+
                 break;
         }
         return super.onTouchEvent(motionEvent);
     }
-
-//    @Override
-//    protected void onDestroy() {
-//        if (textToSpeech != null) {
-//            textToSpeech.stop();
-//            textToSpeech.shutdown();
-//        }
-//        super.onDestroy();
-//    }
 }

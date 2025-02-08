@@ -1,70 +1,113 @@
 package com.example.vipayee;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.InputFilter;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import com.google.android.gms.auth.api.phone.SmsRetriever;
+import com.google.android.gms.auth.api.phone.SmsRetrieverClient;
+import com.google.android.material.textfield.TextInputEditText;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RegisterationOTPActivity extends AppCompatActivity {
 
-    private EditText[] otpFields = new EditText[4];
+    SmsBroadcastReceiver smsBroadcastReceiver;
+    TextInputEditText etOTP;
+    Button btnVerifyOTP;
+
+    private ActivityResultLauncher<Intent> smsConsentLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_register_otp);
-        otpFields[0] = findViewById(R.id.otp1);
-        otpFields[1] = findViewById(R.id.otp2);
-        otpFields[2] = findViewById(R.id.otp3);
-        otpFields[3] = findViewById(R.id.otp4);
-        Button submitOtp = findViewById(R.id.submitOtp);
 
-        for (int i = 0; i < otpFields.length; i++) {
-            final int index = i;
-            otpFields[i].setFilters(new InputFilter[]{new InputFilter.LengthFilter(1)});
+        etOTP = findViewById(R.id.etOTP);
+        btnVerifyOTP = findViewById(R.id.btnVerifyOTP);
 
-            otpFields[i].addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    if (s.length() == 1 && index < otpFields.length - 1) {
-                        otpFields[index + 1].requestFocus();
-                    } else if (s.length() == 0 && index > 0) {
-                        otpFields[index - 1].requestFocus();
+        // Initialize the SMS Consent Launcher
+        smsConsentLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        String message = result.getData().getStringExtra(SmsRetriever.EXTRA_SMS_MESSAGE);
+                        if (message != null) {
+                            String otp = extractOtp(message);
+                            etOTP.setText(otp);
+                            Toast.makeText(this, "OTP Retrieved: " + otp, Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
+        );
 
-                @Override
-                public void afterTextChanged(Editable s) {}
-            });
-        }
+        // Start SMS Retriever API
+        startSmartUserConsent();
 
-        submitOtp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                StringBuilder otpCode = new StringBuilder();
-                for (EditText otpField : otpFields) {
-                    otpCode.append(otpField.getText().toString());
-                }
-                if (otpCode.length() == 4) {
-                    Toast.makeText(RegisterationOTPActivity.this, "OTP Entered: " + otpCode.toString(), Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(RegisterationOTPActivity.this, "Please enter all digits", Toast.LENGTH_SHORT).show();
-                }
+        // Verify OTP button click
+        btnVerifyOTP.setOnClickListener(view -> {
+            String enteredOtp = etOTP.getText().toString();
+            if (!enteredOtp.isEmpty()) {
+                Toast.makeText(this, "OTP Verified Successfully!", Toast.LENGTH_SHORT).show();
+                // Proceed with next steps (e.g., login)
+            } else {
+                Toast.makeText(this, "Please enter OTP", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void startSmartUserConsent() {
+        SmsRetrieverClient client = SmsRetriever.getClient(this);
+        client.startSmsUserConsent(null);
+    }
+
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
+    private void registerBroadcastReceiver() {
+        smsBroadcastReceiver = new SmsBroadcastReceiver();
+        smsBroadcastReceiver.smsBroadcastReceiverListener = new SmsBroadcastReceiver.SmsBroadcastReceiverListener() {
+            @Override
+            public void onSuccess(Intent intent) {
+                smsConsentLauncher.launch(intent);
+            }
+
+            @Override
+            public void onFailure() {
+                Toast.makeText(RegisterationOTPActivity.this, "Failed to retrieve OTP", Toast.LENGTH_SHORT).show();
+            }
+        };
+
+        IntentFilter intentFilter = new IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION);
+        registerReceiver(smsBroadcastReceiver, intentFilter);
+    }
+
+    private String extractOtp(String message) {
+        Pattern otpPattern = Pattern.compile("\\d{4,6}");
+        Matcher matcher = otpPattern.matcher(message);
+        if (matcher.find()) {
+            return matcher.group(0);
+        }
+        return "";
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        registerBroadcastReceiver();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(smsBroadcastReceiver);
     }
 }

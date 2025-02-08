@@ -52,24 +52,24 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    public boolean onTouchEvent (MotionEvent motionEvent) {
-        switch (motionEvent.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                x1 = motionEvent.getX();
-                y1 = motionEvent.getY();
-                break;
-            case MotionEvent.ACTION_UP:
-                x2 = motionEvent.getX();
-                y2 = motionEvent.getY();
-
-//                Left slider
-                if (x1 > x2) {
-                    Intent i = new Intent(RegisterActivity.this, MainActivity.class);
-                    startActivity(i);
-                    finish();
-                }
-                break;
-        }
-        return true;
-    }
+//    public boolean onTouchEvent (MotionEvent motionEvent) {
+//        switch (motionEvent.getAction()) {
+//            case MotionEvent.ACTION_DOWN:
+//                x1 = motionEvent.getX();
+//                y1 = motionEvent.getY();
+//                break;
+//            case MotionEvent.ACTION_UP:
+//                x2 = motionEvent.getX();
+//                y2 = motionEvent.getY();
+//
+////                Left slider
+//                if (x1 > x2) {
+//                    Intent i = new Intent(RegisterActivity.this, MainActivity.class);
+//                    startActivity(i);
+//                    finish();
+//                }
+//                break;
+//        }
+//        return true;
+//    }
 }
