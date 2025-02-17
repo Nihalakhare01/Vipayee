@@ -2,8 +2,10 @@ package com.example.vipayee;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -16,6 +18,9 @@ public class UPIActivity extends AppCompatActivity {
     EditText upiIdField;
     Button verifyUpiButton;
     TextView nameDisplay;
+
+    private String userId;
+
     private static final int UPI_VALIDATION = 101; // Request Code for UPI Validation
 
     @Override
@@ -26,6 +31,18 @@ public class UPIActivity extends AppCompatActivity {
         upiIdField = findViewById(R.id.upiIdField);
         verifyUpiButton = findViewById(R.id.verifyUpiButton);
         nameDisplay = findViewById(R.id.nameDisplay);
+
+
+        // 🔹 Retrieve USER_ID from SharedPreferences
+        SharedPreferences prefs = getSharedPreferences(Constants.PREF_NAME, MODE_PRIVATE);
+        userId = prefs.getString("USER_ID", null);
+
+        if (userId != null) {
+            Log.d("PaymentOptionActivity", "Retrieved USER_ID: " + userId);
+
+        } else {
+            Log.e("PaymentOptionActivity", "USER_ID not found in SharedPreferences.");
+        }
 
         verifyUpiButton.setOnClickListener(v -> {
             String upiId = upiIdField.getText().toString().trim();

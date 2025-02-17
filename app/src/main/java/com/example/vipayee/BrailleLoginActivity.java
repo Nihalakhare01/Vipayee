@@ -1,30 +1,38 @@
 package com.example.vipayee;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.speech.tts.TextToSpeech;
+import android.util.Log;
 import android.widget.TextView;
-
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
+import org.json.JSONObject;
+import java.io.IOException;
 import java.util.Locale;
+import java.util.UUID;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class BrailleLoginActivity extends AppCompatActivity {
     private TextView pinDisplay;
     private TextToSpeech textToSpeech;
-    private boolean dot1Pressed = false;
-    private boolean dot2Pressed = false;
-    private boolean dot3Pressed = false;
-    private boolean dot4Pressed = false;
+    private boolean dot1Pressed = false, dot2Pressed = false, dot3Pressed = false, dot4Pressed = false;
     private Vibrator vibrator;
     private StringBuilder pin = new StringBuilder();
     private Handler handler = new Handler();
-    private Runnable recognizeNumberRunnable;
-    private int digitCount = 0; // To track digit entry progress
-    private static final String DEFAULT_PIN = "1234"; // Default login PIN
+    private int digitCount = 0;
+    private String userPin = "";
+
+    // Unique User ID (🔹 Replace with actual dynamic user ID if needed)
+    private static final UUID USER_ID = Constants.USER_ID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,9 +44,12 @@ public class BrailleLoginActivity extends AppCompatActivity {
         textToSpeech = new TextToSpeech(this, status -> {
             if (status == TextToSpeech.SUCCESS) {
                 textToSpeech.setLanguage(Locale.ENGLISH);
-                speakMessage("Enter your four digit login PIN. Enter first digit.");
+                speakMessage("Fetching PIN. Please wait.");
             }
         });
+
+        // Fetch PIN from API
+        fetchUserPin(USER_ID.toString());
 
         // Initialize the button click listeners
         findViewById(R.id.dot1).setOnClickListener(v -> onDotPressed(1));
@@ -47,49 +58,61 @@ public class BrailleLoginActivity extends AppCompatActivity {
         findViewById(R.id.dot4).setOnClickListener(v -> onDotPressed(4));
     }
 
+    private void fetchUserPin(String userId) {
+        OkHttpClient client = new OkHttpClient();
+        String url =  Constants.BASE_URL + "user/Registration/get-pin/" + userId;
+
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                runOnUiThread(() -> speakMessage("Failed to fetch PIN. Please check your connection."));
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        String responseData = response.body().string();
+                        JSONObject json = new JSONObject(responseData);
+                        userPin = json.getString("pin").trim();
+
+                        runOnUiThread(() -> speakMessage("PIN fetched successfully. Enter your four-digit PIN."));
+                    } catch (Exception e) {
+                        runOnUiThread(() -> speakMessage("Error parsing PIN data."));
+                    }
+                } else {
+                    runOnUiThread(() -> speakMessage("Failed to retrieve PIN. Try again."));
+                }
+            }
+        });
+    }
+
     private void onDotPressed(int dotNumber) {
-        // Toggle the pressed state of the dot
         switch (dotNumber) {
-            case 1:
-                dot1Pressed = !dot1Pressed;
-                break;
-            case 2:
-                dot2Pressed = !dot2Pressed;
-                break;
-            case 3:
-                dot3Pressed = !dot3Pressed;
-                break;
-            case 4:
-                dot4Pressed = !dot4Pressed;
-                break;
+            case 1: dot1Pressed = !dot1Pressed; break;
+            case 2: dot2Pressed = !dot2Pressed; break;
+            case 3: dot3Pressed = !dot3Pressed; break;
+            case 4: dot4Pressed = !dot4Pressed; break;
         }
-
-        // Remove any previous pending recognition task
-        if (recognizeNumberRunnable != null) {
-            handler.removeCallbacks(recognizeNumberRunnable);
-        }
-
-        // Set a new recognition task after 500ms
-        recognizeNumberRunnable = this::recognizeAndUpdatePin;
-        handler.postDelayed(recognizeNumberRunnable, 500);
+        handler.postDelayed(this::recognizeAndUpdatePin, 500);
     }
 
     private void recognizeAndUpdatePin() {
-        if (pin.length() < 7) {  // "● " counts as 2 characters per digit
+        if (pin.length() < 4) {
             String number = getBrailleNumber(dot1Pressed, dot2Pressed, dot3Pressed, dot4Pressed);
-
             if (!number.isEmpty()) {
                 pin.append(number);
                 pinDisplay.setText("● ".repeat(pin.length()).trim());
 
-                // Speak confirmation
                 digitCount++;
                 speakMessage("You have entered digit " + digitCount + ".");
-
-                // Trigger vibration after every valid digit
                 triggerVibration();
 
-                // If all 4 digits are entered, verify PIN
                 if (digitCount == 4) {
                     handler.postDelayed(this::authenticatePin, 1500);
                 } else {
@@ -97,24 +120,54 @@ public class BrailleLoginActivity extends AppCompatActivity {
                 }
             }
         }
-
         resetGrid();
     }
 
     private void authenticatePin() {
-        if (pin.toString().equals(DEFAULT_PIN)) {
+        if (pin.toString().trim().equals(userPin.trim())) {
             speakMessage("Authentication successful. Moving to the payment feature section.");
+
+            // 🔹 Save User ID in SharedPreferences for future use
+            SharedPreferences prefs = getSharedPreferences(Constants.PREF_NAME, MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString("USER_ID", USER_ID.toString());
+            editor.apply();
+
+            Log.d("BrailleLoginActivity", "Saved USER_ID: " + USER_ID.toString());
+
             handler.postDelayed(() -> {
                 startActivity(new Intent(BrailleLoginActivity.this, OptionActivity.class));
                 finish();
             }, 2000);
         } else {
-            // Wrong PIN - Reset and try again
             speakMessage("Incorrect PIN. Please try again.");
-            pin.setLength(0); // Clear entered PIN
+            pin.setLength(0);
             digitCount = 0;
-            handler.postDelayed(() -> speakMessage("Enter your four digit login PIN. Enter first digit."), 2000);
+            handler.postDelayed(() -> speakMessage("Enter your four-digit login PIN."), 2000);
             pinDisplay.setText("");
+        }
+    }
+
+    private void resetGrid() {
+        dot1Pressed = false;
+        dot2Pressed = false;
+        dot3Pressed = false;
+        dot4Pressed = false;
+    }
+
+    private void triggerVibration() {
+        if (vibrator != null) {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
+            } else {
+                vibrator.vibrate(100);
+            }
+        }
+    }
+
+    private void speakMessage(String message) {
+        if (textToSpeech != null) {
+            textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
         }
     }
 
@@ -135,36 +188,4 @@ public class BrailleLoginActivity extends AppCompatActivity {
             default: return "";
         }
     }
-
-    private void resetGrid() {
-        dot1Pressed = false;
-        dot2Pressed = false;
-        dot3Pressed = false;
-        dot4Pressed = false;
-    }
-
-    private void triggerVibration() {
-        if (vibrator != null) {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                vibrator.vibrate(VibrationEffect.createOneShot(100, 255));
-            } else {
-                vibrator.vibrate(100);
-            }
-        }
-    }
-
-    private void speakMessage(String message) {
-        if (textToSpeech != null) {
-            textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
-        }
-    }
-
-//    @Override
-//    protected void onDestroy() {
-//        if (textToSpeech != null) {
-//            textToSpeech.stop();
-//            textToSpeech.shutdown();
-//        }
-//        super.onDestroy();
-//    }
 }

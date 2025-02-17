@@ -1,42 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
-    android:gravity="center"
-    android:background="@android:color/white">
-
-    <EditText
-        android:id="@+id/editText0"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:hint="User ID"
-        android:inputType="number"/>
+    android:padding="20dp">
 
     <EditText
         android:id="@+id/editText1"
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Full Name"
-        android:inputType="text"/>
+        android:inputType="textPersonName" />
 
     <EditText
         android:id="@+id/editText2"
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Phone Number"
-        android:inputType="phone"/>
+        android:inputType="phone" />
 
     <EditText
         android:id="@+id/editText3"
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="PIN"
-        android:inputType="numberPassword"/>
+        android:inputType="numberPassword" />
 
     <Button
         android:id="@+id/buttonSubmit"
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Submit"/>
+        android:text="Register"
+        android:onClick="registerUser" />
 </LinearLayout>

@@ -1,7 +1,9 @@
 package com.example.vipayee;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import androidx.annotation.OptIn;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,17 +25,38 @@ import com.google.mlkit.vision.common.InputImage;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import androidx.camera.view.PreviewView;
+import java.util.Locale;
 
 public class QRScanActivity extends AppCompatActivity {
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 1001;
     private ExecutorService cameraExecutor;
     private BarcodeScanner barcodeScanner;
+    private String userId;
+    private TextToSpeech textToSpeech;
     private boolean isQrCodeProcessed = false; // Flag to track QR code processing
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qr_scan);
+
+        // Initialize Text-to-Speech
+        textToSpeech = new TextToSpeech(this, status -> {
+            if (status == TextToSpeech.SUCCESS) {
+                textToSpeech.setLanguage(Locale.ENGLISH);
+                speakText("You can scan QR now"); // Speak when the activity starts
+            }
+        });
+
+        // Retrieve USER_ID from SharedPreferences
+        SharedPreferences prefs = getSharedPreferences(Constants.PREF_NAME, MODE_PRIVATE);
+        userId = prefs.getString("USER_ID", null);
+
+        if (userId != null) {
+            Log.d("PaymentOptionActivity", "Retrieved USER_ID: " + userId);
+        } else {
+            Log.e("PaymentOptionActivity", "USER_ID not found in SharedPreferences.");
+        }
 
         // Initialize ML Kit Barcode Scanner
         barcodeScanner = BarcodeScanning.getClient();
@@ -79,7 +102,7 @@ public class QRScanActivity extends AppCompatActivity {
                 PreviewView previewView = findViewById(R.id.previewView);
                 preview.setSurfaceProvider(previewView.getSurfaceProvider());
             } catch (Exception e) {
-                Log.e("QRSacnActivity", "Camera initialization failed.", e);
+                Log.e("QRScanActivity", "Camera initialization failed.", e);
             }
         }, ContextCompat.getMainExecutor(this));
     }
@@ -112,24 +135,37 @@ public class QRScanActivity extends AppCompatActivity {
                                 // Set the flag to true to prevent further processing
                                 isQrCodeProcessed = true;
 
-                                // Navigate to ResultActivity with the raw QR content
-                                Intent intent = new Intent(QRScanActivity.this, QRPaymentProcessActivity.class);
-                                intent.putExtra("QR_CONTENT", qrContent);
-                                startActivity(intent);
+                                // Speak success message
+                                speakText("QR fetched successfully");
 
-                                // Stop analyzing further frames
-                                imageProxy.close();
-                                finish(); // Close the current activity
+                                // Delay finishing the activity to let TTS complete
+                                new android.os.Handler().postDelayed(() -> {
+                                    // Navigate to QRPaymentProcessActivity with the QR content
+                                    Intent intent = new Intent(QRScanActivity.this, QRPaymentProcessActivity.class);
+                                    intent.putExtra("QR_CONTENT", qrContent);
+                                    startActivity(intent);
+
+                                    finish(); // Close the current activity
+                                }, 2300); // 2-second delay (adjust as needed)
                             }
                         })
                         .addOnFailureListener(e -> {
-                            Log.e("QRSacnActivity", "QR code scan failed.", e);
+                            Log.e("QRScanActivity", "QR code scan failed.", e);
+                            speakText("Unable to fetch QR");
                         })
                         .addOnCompleteListener(task -> imageProxy.close());
+
             } catch (Exception e) {
-                Log.e("QRSacnActivity", "Failed to process image.", e);
+                Log.e("QRScanActivity", "Failed to process image.", e);
                 imageProxy.close();
             }
+        }
+    }
+
+    // Function to speak text
+    private void speakText(String message) {
+        if (textToSpeech != null) {
+            textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
         }
     }
 
@@ -137,6 +173,10 @@ public class QRScanActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         cameraExecutor.shutdown();
+        if (textToSpeech != null) {
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+        }
     }
 
     @Override

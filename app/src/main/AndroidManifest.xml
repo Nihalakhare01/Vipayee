@@ -65,6 +65,8 @@
         <activity android:name=".PaymentActivity"/>
 
 
+
+
     </application>
 
 </manifest>

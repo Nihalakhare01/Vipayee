@@ -2,8 +2,10 @@ package com.example.vipayee;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,12 +19,26 @@ public class PaymentActivity extends AppCompatActivity {
     TextView paymentDetails;
     Button payButton;
     String upiId, upiName, amount;
+
+    private String userId;
     private static final int UPI_PAYMENT = 102; // Request Code for UPI Payment
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment);
+
+
+        // 🔹 Retrieve USER_ID from SharedPreferences
+        SharedPreferences prefs = getSharedPreferences(Constants.PREF_NAME, MODE_PRIVATE);
+        userId = prefs.getString("USER_ID", null);
+
+        if (userId != null) {
+            Log.d("PaymentActivity", "Retrieved USER_ID: " + userId);
+
+        } else {
+            Log.e("PaymentActivity", "USER_ID not found in SharedPreferences.");
+        }
 
         paymentDetails = findViewById(R.id.paymentDetails);
         payButton = findViewById(R.id.payButton);

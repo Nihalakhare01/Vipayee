@@ -1,8 +1,10 @@
 package com.example.vipayee;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import androidx.activity.EdgeToEdge;
@@ -18,11 +20,24 @@ public class PaymentOptionActivity extends AppCompatActivity {
     float x1,x2;
     private TextToSpeech textToSpeech;
 
+    private String userId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_payement_option);
+
+        // 🔹 Retrieve USER_ID from SharedPreferences
+        SharedPreferences prefs = getSharedPreferences(Constants.PREF_NAME, MODE_PRIVATE);
+        userId = prefs.getString("USER_ID", null);
+
+        if (userId != null) {
+            Log.d("PaymentOptionActivity", "Retrieved USER_ID: " + userId);
+
+        } else {
+            Log.e("PaymentOptionActivity", "USER_ID not found in SharedPreferences.");
+        }
 
         // Initialize Text-to-Speech
         textToSpeech = new TextToSpeech(this, status -> {
@@ -33,10 +48,29 @@ public class PaymentOptionActivity extends AppCompatActivity {
         });
     }
 
+    // 🔹 Common method to navigate & pass USER_ID
+    private void navigateToActivity(Class<?> targetActivity, String speechMessage) {
+        Log.d("PaymentOptionActivity","called me");
+        if (userId != null) {
+
+            Intent intent = new Intent(PaymentOptionActivity.this, targetActivity);
+            intent.putExtra("USER_ID", userId); // Pass USER_ID
+            Log.d("PaymentOptionActivity", "PaymentOptionActivity Sending USER_ID: " + userId);
+            startActivity(intent);
+        } else {
+            speakMessage("User ID not found. Please re-login.");
+        }
+    }
+
+
     private void speakInstructions() {
-        String message = "Make Transaction here. Swipe Right for Scan the QR.";
+        String message = "Make Transaction here. Swipe Left for Scan the QR. Swipe Right for Pay By UPI Id.";
         textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
     }
+
+
+
+
 
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
@@ -50,18 +84,20 @@ public class PaymentOptionActivity extends AppCompatActivity {
 
                 //Left slide
                 if (x1 < x2) {
-                    textToSpeech.speak("Opening the QR Scan Page.", TextToSpeech.QUEUE_FLUSH, null, null);
-                    Intent i = new Intent(PaymentOptionActivity.this, QRScanActivity.class);
-                    startActivity(i);
+                    navigateToActivity(QRScanActivity.class, "Opening Check Balance.");
 //                    Right Slide
                 } else if (x1 > x2) {
-                    textToSpeech.speak("Opening the pay by number.", TextToSpeech.QUEUE_FLUSH, null, null);
-                    Intent i = new Intent(PaymentOptionActivity.this, UPIActivity.class);
-                    startActivity(i);
+                    navigateToActivity(UPIActivity.class, "Opening Check Balance.");
                 }
 
                 break;
         }
         return super.onTouchEvent(motionEvent);
+    }
+
+    private void speakMessage(String message) {
+        if (textToSpeech != null) {
+            textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
+        }
     }
 }

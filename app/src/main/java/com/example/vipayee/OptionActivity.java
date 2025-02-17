@@ -1,8 +1,10 @@
 package com.example.vipayee;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import androidx.activity.EdgeToEdge;
@@ -11,15 +13,27 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.Locale;
 
 public class OptionActivity extends AppCompatActivity {
-
-    float x1,x2,y1,y2;
+    float x1, x2, y1, y2;
     private TextToSpeech textToSpeech;
+    private String userId; // Store USER_ID
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_option);
+
+        // 🔹 Retrieve USER_ID from SharedPreferences
+        SharedPreferences prefs = getSharedPreferences(Constants.PREF_NAME, MODE_PRIVATE);
+        userId = prefs.getString("USER_ID", null);
+
+        if (userId != null) {
+            Log.d("OptionActivity", "Retrieved USER_ID: " + userId);
+
+        } else {
+            Log.e("OptionActivity", "USER_ID not found in SharedPreferences.");
+        }
+
         // Initialize Text-to-Speech
         textToSpeech = new TextToSpeech(this, status -> {
             if (status == TextToSpeech.SUCCESS) {
@@ -28,6 +42,7 @@ public class OptionActivity extends AppCompatActivity {
             }
         });
     }
+
 
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
@@ -44,21 +59,18 @@ public class OptionActivity extends AppCompatActivity {
                 float deltaY = y2 - y1;
 
                 if (Math.abs(deltaX) > Math.abs(deltaY)) {
-                    // Horizontal Swipe
+                    // 🔹 Horizontal Swipe (Left/Right)
                     if (deltaX > 0) {
-                        textToSpeech.speak("Opening Check Balance options.", TextToSpeech.QUEUE_FLUSH, null, null);
-                        startActivity(new Intent(OptionActivity.this, CheckBalanceActivity.class));
+                        navigateToActivity(CheckBalanceActivity.class, "Opening Check Balance.");
                     } else {
-                        textToSpeech.speak("Opening Payment Mode options.", TextToSpeech.QUEUE_FLUSH, null, null);
-                        startActivity(new Intent(OptionActivity.this, PaymentOptionActivity.class));
+                        navigateToActivity(PaymentOptionActivity.class, "Opening Payment Mode.");
                     }
                 } else {
-                    // Vertical Swipe
+                    // 🔹 Vertical Swipe (Up/Down)
                     if (deltaY > 0) {
-                        textToSpeech.speak("Swipe up for transaction history.", TextToSpeech.QUEUE_FLUSH, null, null);
+                        speakMessage("Swipe up for transaction history.");
                     } else {
-                        textToSpeech.speak("Opening Transaction History.", TextToSpeech.QUEUE_FLUSH, null, null);
-                        startActivity(new Intent(OptionActivity.this, TransactionHistoryActivity.class));
+                        navigateToActivity(TransactionHistoryActivity.class, "Opening Transaction History.");
                     }
                 }
                 break;
@@ -66,10 +78,29 @@ public class OptionActivity extends AppCompatActivity {
         return super.onTouchEvent(motionEvent);
     }
 
-    private void speakInstructions() {
-        String message = "Payment feature's are available. Swipe right for transaction. Swipe left to check balance. Swipe up for past transaction.";
-        textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
+    // 🔹 Common method to navigate & pass USER_ID
+    private void navigateToActivity(Class<?> targetActivity, String speechMessage) {
+        Log.d("OptionActivity","called me");
+        if (userId != null) {
+
+            Intent intent = new Intent(OptionActivity.this, targetActivity);
+            intent.putExtra("USER_ID", userId); // Pass USER_ID
+            Log.d("OptionActivity", "OptionActivity Sending USER_ID: " + userId);
+            startActivity(intent);
+        } else {
+            speakMessage("User ID not found. Please re-login.");
+        }
     }
 
+    private void speakInstructions() {
+        String message = "Payment features available. Swipe right for transaction. Swipe left to check balance. Swipe up for past transactions.";
+        speakMessage(message);
+    }
 
+    private void speakMessage(String message) {
+        textToSpeech.speak(userId, TextToSpeech.QUEUE_FLUSH, null, null);
+        if (textToSpeech != null) {
+            textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
+        }
+    }
 }
