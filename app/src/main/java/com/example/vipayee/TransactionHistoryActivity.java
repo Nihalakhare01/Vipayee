@@ -120,9 +120,9 @@ public class TransactionHistoryActivity extends AppCompatActivity {
             return;
         }
 
-        StringBuilder transactionDetails = new StringBuilder("Your first 5 transactions are: ");
+        StringBuilder transactionDetails = new StringBuilder("Your first 3 transactions are: ");
 
-        int count = Math.min(5, transactionList.size()); // Get only first 5 transactions
+        int count = Math.min(3, transactionList.size()); // Get only first 5 transactions
         for (int i = 0; i < count; i++) {
             TransactionModel transaction = transactionList.get(i);
             String type = transaction.getTransactionType().equalsIgnoreCase("Credit") ? "Received from" : "Sent to";

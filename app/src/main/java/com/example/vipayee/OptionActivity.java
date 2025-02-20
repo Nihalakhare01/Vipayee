@@ -61,7 +61,7 @@ public class OptionActivity extends AppCompatActivity {
                 if (Math.abs(deltaX) > Math.abs(deltaY)) {
                     // 🔹 Horizontal Swipe (Left/Right)
                     if (deltaX > 0) {
-                        navigateToActivity(CheckBalanceActivity.class, "Opening Check Balance.");
+                        navigateToActivity(CheckBalanceBrailleLoginActivity.class, "Enter your 4 digit Login Pin to Know balance.");
                     } else {
                         navigateToActivity(PaymentOptionActivity.class, "Opening Payment Mode.");
                     }
@@ -70,7 +70,7 @@ public class OptionActivity extends AppCompatActivity {
                     if (deltaY > 0) {
                         speakMessage("Swipe up for transaction history.");
                     } else {
-                        navigateToActivity(TransactionHistoryActivity.class, "Opening Transaction History.");
+                        navigateToActivity(TransactionHistoryBrailleLoginActivity.class, "Enter your 4 digit Login Pin to Know Past Transaction.");
                     }
                 }
                 break;

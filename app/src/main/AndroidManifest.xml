@@ -63,7 +63,8 @@
         <activity android:name=".UPIActivity"/>
         <activity android:name=".AmountActivity"/>
         <activity android:name=".PaymentActivity"/>
-
+        <activity android:name=".CheckBalanceBrailleLoginActivity"/>
+        <activity android:name=".TransactionHistoryBrailleLoginActivity"/>
 
 
 
