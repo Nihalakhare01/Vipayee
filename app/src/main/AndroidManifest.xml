@@ -7,8 +7,10 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS"/>
     <uses-permission android:name="android.permission.READ_SMS"/>
     <uses-permission android:name="android.permission.INTERNET"/>
+<!--    <uses-feature android:name="android.hardware.camera" android:required="true"/>-->
+<!--    <uses-permission android:name="android.permission.CAMERA" />-->
 
-
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-permission android:name="android.permission.RECEIVE_SMS"/>
     <uses-permission android:name="android.permission.READ_PHONE_NUMBERS"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
@@ -25,7 +27,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Vipayee"
         tools:targetApi="31"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        android:enableOnBackInvokedCallback="true">
 
 
         <receiver
@@ -48,6 +51,12 @@
             </intent-filter>
         </activity>
 
+<!--        <uses-feature android:name="android.hardware.camera" />-->
+<!--        <uses-feature android:name="android.hardware.camera.autofocus" />-->
+
+
+
+
         <activity android:name=".LoginActivity"/>
         <activity android:name=".RegisterActivity"/>
         <activity android:name=".OptionActivity"/>
@@ -65,6 +74,9 @@
         <activity android:name=".PaymentActivity"/>
         <activity android:name=".CheckBalanceBrailleLoginActivity"/>
         <activity android:name=".TransactionHistoryBrailleLoginActivity"/>
+        <activity android:name=".GenerateQRActivity"/>
+        <activity android:name=".QRScannerActivityVI"/>
+        <activity android:name=".PaymentActivityVI"/>
 
 
 

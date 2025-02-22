@@ -1,11 +1,9 @@
 package com.example.vipayee;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -27,8 +25,7 @@ public class CheckBalanceActivity extends AppCompatActivity {
     private TextToSpeech textToSpeech;
     private TextView balanceTextView;
     private Button buttonRefresh;
-    private String userId; // User ID from SharedPreferences
-//    private static final String PREF_NAME = "UserPref"; // SharedPreferences Name
+    private String userId = Constants.USER_ID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,42 +35,25 @@ public class CheckBalanceActivity extends AppCompatActivity {
         balanceTextView = findViewById(R.id.balanceTextView);
         buttonRefresh = findViewById(R.id.buttonRefresh);
 
-        // 🔹 Retrieve User ID from SharedPreferences
-        SharedPreferences prefs = getSharedPreferences(Constants.PREF_NAME, MODE_PRIVATE);
-        userId = prefs.getString("USER_ID", null);
-
-        if (userId != null) {
-            Log.d("CheckBalanceActivity", " CheckBalanceActivity Retrieved USER_ID: " + userId);
-
-        } else {
-            Log.e("CheckBalanceActivity", "USER_ID not found in SharedPreferences.");
-        }
+        Log.d("CheckBalanceActivity", "Using USER_ID: " + userId);
 
         // Initialize Text-to-Speech
         textToSpeech = new TextToSpeech(this, status -> {
             if (status == TextToSpeech.SUCCESS) {
                 textToSpeech.setLanguage(Locale.ENGLISH);
-                if (userId != null) {
-                    fetchBalance(userId);
-                } else {
-                    speakMessage("User ID not found. Please re-login.");
-                }
+                fetchBalance(userId);
             }
         });
 
         // Refresh balance when button is clicked
-        buttonRefresh.setOnClickListener(v -> {
-            if (userId != null) {
-                fetchBalance(userId);
-            } else {
-                speakMessage("User ID missing. Please re-login.");
-            }
-        });
+        buttonRefresh.setOnClickListener(v -> fetchBalance(userId));
     }
 
     private void fetchBalance(String userId) {
         OkHttpClient client = new OkHttpClient();
-        String url = Constants.BASE_URL + "user/Checkbalance/get-balance/" + userId; // Modify based on your API
+        String url = Constants.BASE_URL+"user/CheckBalance/get-balance/" + userId;
+
+        Log.d("CheckBalanceActivity", "Fetching balance from: " + url);
 
         Request request = new Request.Builder()
                 .url(url)
@@ -84,33 +64,42 @@ public class CheckBalanceActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 runOnUiThread(() -> speakMessage("Failed to fetch balance. Please check your connection."));
-                Log.e("CheckBalance", "API Call Failed", e);
+                Log.e("CheckBalance", "API Call Failed: " + e.getMessage(), e);
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful() && response.body() != null) {
-                    try {
-                        String responseData = response.body().string();
-                        JSONObject json = new JSONObject(responseData);
-                        String balance = json.getString("balance");
+                    String responseData = response.body().string();
+                    Log.d("API_RESPONSE", "Response Data: " + responseData);
 
-                        runOnUiThread(() -> {
-                            balanceTextView.setText("Your Balance: ₹" + balance);
-                            speakMessage("Your available balance is " + balance + " rupees.");
-                        });
+                    try {
+                        JSONObject json = new JSONObject(responseData);
+                        if (json.has("balance")) {
+                            int balance = json.optInt("balance", 0); // Correct way to parse integer values
+
+                            runOnUiThread(() -> {
+                                balanceTextView.setText("Your Balance: ₹" + balance);
+                                speakMessage("Your available balance is " + balance + " rupees.");
+                            });
+
+                        } else {
+                            runOnUiThread(() -> speakMessage("Balance information is missing. Please try again."));
+                            Log.e("JSON_ERROR", "Balance key not found in response.");
+                        }
 
                     } catch (Exception e) {
                         runOnUiThread(() -> speakMessage("Error processing balance data."));
-                        Log.e("CheckBalance", "JSON Parsing Error", e);
+                        Log.e("JSON_PARSE_ERROR", "Error parsing JSON: " + e.getMessage(), e);
                     }
                 } else {
                     runOnUiThread(() -> speakMessage("Failed to retrieve balance. Please try again."));
-                    Log.e("CheckBalance", "API Response Error: " + response.code());
+                    Log.e("CheckBalance", "API Response Error: Code " + response.code());
                 }
             }
         });
     }
+
 
     private void speakMessage(String message) {
         if (textToSpeech != null) {

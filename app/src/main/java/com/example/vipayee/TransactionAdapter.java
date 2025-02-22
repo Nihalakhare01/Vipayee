@@ -1,106 +1,61 @@
 package com.example.vipayee;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
-public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder> {
+public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHolder> {
+    private List<Transaction> transactionList;
 
-    private List<TransactionModel> transactions;
-
-    public TransactionAdapter(List<TransactionModel> transactions) {
-        this.transactions = transactions;
+    public TransactionAdapter(List<Transaction> transactionList) {
+        this.transactionList = transactionList;
     }
 
     @NonNull
     @Override
-    public TransactionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_transaction, parent, false);
-        return new TransactionViewHolder(view);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TransactionViewHolder holder, int position) {
-        TransactionModel transaction = transactions.get(position);
-        holder.amountTextView.setText("₹ " + transaction.getAmount());
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Transaction transaction = transactionList.get(position);
 
-        // Extract formatted date and time from transactionDate String
-        String formattedDate = formatDate(transaction.getTransactionDate());
-        String formattedTime = formatTime(transaction.getTransactionDate());
+        holder.payeeName.setText("Payee: " + transaction.getPayeeName());
+        holder.amount.setText("₹" + transaction.getAmount());
+        holder.transactionDate.setText(transaction.getTransactionDate());  // Left side
+        holder.transactionTime.setText(transaction.getTransactionTime());  // Right side
 
-        holder.dateTextView.setText(formattedDate);
-        holder.timeTextView.setText(formattedTime);
-
-        if ("Credit".equalsIgnoreCase(transaction.getTransactionType())) {
-            holder.transactionTypeTextView.setText("Received from: " + transaction.getPayeeName());
-            holder.transactionTypeTextView.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.green));
+        if (transaction.getTransactionType().equalsIgnoreCase("Debited")) {
+            holder.transactionType.setText("Debited");
+            holder.transactionType.setTextColor(Color.RED);  // Red for Debit
         } else {
-            holder.transactionTypeTextView.setText("Sent to: " + transaction.getPayeeName());
-            holder.transactionTypeTextView.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.red));
+            holder.transactionType.setText("Credited");
+            holder.transactionType.setTextColor(Color.GREEN);  // Green for Credit
         }
     }
-
-    // Function to extract and format Date (yyyy-MM-dd)
-    private String formatDate(String transactionDate) {
-        try {
-            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
-            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-            Date date = inputFormat.parse(transactionDate);
-            return (date != null) ? outputFormat.format(date) : "";
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "";
-        }
-    }
-
-    // Function to extract and format Time (HH:mm)
-    private String formatTime(String transactionDate) {
-        try {
-            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
-            SimpleDateFormat outputFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-            Date date = inputFormat.parse(transactionDate);
-            return (date != null) ? outputFormat.format(date) : "";
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "";
-        }
-    }
-
 
     @Override
     public int getItemCount() {
-        return transactions.size();
+        return transactionList.size();
     }
 
-    public static class TransactionViewHolder extends RecyclerView.ViewHolder {
-        TextView transactionTypeTextView, amountTextView, dateTextView, timeTextView;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView payeeName, amount, transactionDate, transactionTime, transactionType;
 
-        public TransactionViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            transactionTypeTextView = itemView.findViewById(R.id.transactionType);
-            amountTextView = itemView.findViewById(R.id.amount);
-            dateTextView = itemView.findViewById(R.id.date);
-            timeTextView = itemView.findViewById(R.id.time);
+            payeeName = itemView.findViewById(R.id.payee_name);
+            amount = itemView.findViewById(R.id.amount);
+            transactionDate = itemView.findViewById(R.id.transaction_date);
+            transactionTime = itemView.findViewById(R.id.transaction_time);
+            transactionType = itemView.findViewById(R.id.transaction_type);
         }
-    }
-
-    // Function to format Date (yyyy-MM-dd)
-    private String formatDate(long timestamp) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-        return dateFormat.format(new Date(timestamp));
-    }
-
-    // Function to format Time (HH:mm)
-    private String formatTime(long timestamp) {
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        return timeFormat.format(new Date(timestamp));
     }
 }

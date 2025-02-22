@@ -68,7 +68,7 @@ public class OptionActivity extends AppCompatActivity {
                 } else {
                     // 🔹 Vertical Swipe (Up/Down)
                     if (deltaY > 0) {
-                        speakMessage("Swipe up for transaction history.");
+                        navigateToActivity(GenerateQRActivity.class, "TO Receive Payment");
                     } else {
                         navigateToActivity(TransactionHistoryBrailleLoginActivity.class, "Enter your 4 digit Login Pin to Know Past Transaction.");
                     }

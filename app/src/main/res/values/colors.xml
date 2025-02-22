@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="green">#008000</color>  <!-- Dark Green -->
     <color name="red">#FF0000</color>
+    <color name="purple" tools:ignore="ResourceCycle">@color/purple</color>
+    <color name="grey" tools:ignore="ResourceCycle">@color/grey</color>
+
 </resources>

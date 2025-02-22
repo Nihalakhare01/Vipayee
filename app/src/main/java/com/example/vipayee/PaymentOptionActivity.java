@@ -17,7 +17,7 @@ import java.util.Locale;
 
 public class PaymentOptionActivity extends AppCompatActivity {
 
-    float x1,x2;
+    float x1,x2,y1,y2;
     private TextToSpeech textToSpeech;
 
     private String userId;
@@ -75,21 +75,52 @@ public class PaymentOptionActivity extends AppCompatActivity {
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
         switch (motionEvent.getAction()) {
+//            case MotionEvent.ACTION_DOWN:
+//                x1 = motionEvent.getX();
+//                break;
+//            case MotionEvent.ACTION_UP:
+//                x2 = motionEvent.getX();
+//
+//
+//                //Left slide
+//                if (x1 < x2) {
+//                    navigateToActivity(QRScanActivity.class, "Opening Check Balance.");
+////                    Right Slide
+//                } else if (x1 > x2) {
+//                    navigateToActivity(UPIActivity.class, "Opening Check Balance.");
+//                }
+//
+//                break;
+
+
+
             case MotionEvent.ACTION_DOWN:
                 x1 = motionEvent.getX();
+                y1 = motionEvent.getY();
                 break;
             case MotionEvent.ACTION_UP:
                 x2 = motionEvent.getX();
+                y2 = motionEvent.getY();
 
+                float deltaX = x2 - x1;
+                float deltaY = y2 - y1;
 
-                //Left slide
-                if (x1 < x2) {
-                    navigateToActivity(QRScanActivity.class, "Opening Check Balance.");
-//                    Right Slide
-                } else if (x1 > x2) {
-                    navigateToActivity(UPIActivity.class, "Opening Check Balance.");
+                if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                    // 🔹 Horizontal Swipe (Left/Right)
+                    if (deltaX > 0) {
+                        navigateToActivity(QRScanActivity.class, "Opening QR Scan");
+                    } else {
+                        navigateToActivity(UPIActivity.class, "Opening Upi Mode.");
+                    }
+                } else {
+                    // 🔹 Vertical Swipe (Up/Down)
+                    if (deltaY > 0) {
+                        navigateToActivity(QRScannerActivityVI.class, "ViScan");
+                    }
+                    else {
+                        navigateToActivity(QRScannerActivityVI.class, "ViScan");
+                    }
                 }
-
                 break;
         }
         return super.onTouchEvent(motionEvent);

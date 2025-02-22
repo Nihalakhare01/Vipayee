@@ -32,4 +32,11 @@
         android:layout_height="wrap_content"
         android:text="Register"
         android:onClick="registerUser" />
+
+
+    <Button
+        android:id="@+id/fetchUserIdButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Fetch User ID" />
 </LinearLayout>

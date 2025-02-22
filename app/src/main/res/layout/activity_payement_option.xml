@@ -36,9 +36,10 @@
         app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.368" />
+        app:layout_constraintVertical_bias="0.380" />
 
-<!--    <Button-->
+
+    <!--    <Button-->
 <!--        android:id="@+id/button4"-->
 <!--        android:layout_width="354dp"-->
 <!--        android:layout_height="173dp"-->
@@ -52,6 +53,21 @@
 <!--        app:layout_constraintStart_toStartOf="parent"-->
 <!--        app:layout_constraintTop_toTopOf="parent"-->
 <!--        app:layout_constraintVertical_bias="0.679" />-->
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="354dp"
+        android:layout_height="174dp"
+        android:background="@color/white"
+        android:text="Vi Scan"
+        android:textColor="@color/black"
+        android:textSize="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.71" />
 
     <Button
         android:id="@+id/button5"

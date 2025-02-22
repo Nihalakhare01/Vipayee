@@ -17,6 +17,15 @@ public interface ApiService {
 
     @GET("Registration/get-pin/{userId}")
     Call<ApiService> getPin(@Path("userId") String userId);
+
+    @GET("Registration/get-uuid/{phoneNumber}")
+    Call<String> getUserId(@Path("phoneNumber") String phoneNumber);
+
+
+    @POST("user/Transaction/process")
+    Call<Void> processTransaction(@Body TransactionRequest request);
+
+
 }
 
 

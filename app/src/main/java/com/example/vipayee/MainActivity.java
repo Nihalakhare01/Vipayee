@@ -3,6 +3,7 @@ package com.example.vipayee;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.util.Log;
 import android.view.MotionEvent;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +22,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+
+//        Constants.loadUserId(this);
+
+        if (Constants.USER_ID != null) {
+            Log.d("MainActivity", "User UUID: " + Constants.USER_ID.toString());
+        } else {
+            Log.e("MainActivity", "User UUID not set yet!");
+        }
 
         // Initialize Text-to-Speech
         textToSpeech = new TextToSpeech(this, status -> {

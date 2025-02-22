@@ -1,7 +1,6 @@
 package com.example.vipayee;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.VibrationEffect;
@@ -14,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.json.JSONObject;
 import java.io.IOException;
 import java.util.Locale;
-import java.util.UUID;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -29,18 +27,21 @@ public class BrailleLoginActivity extends AppCompatActivity {
     private StringBuilder pin = new StringBuilder();
     private Handler handler = new Handler();
     private int digitCount = 0;
-    private String userPin = "";
+    private String userPin = ""; // User PIN fetched from API
+    private static final String TAG = "BrailleLoginActivity";
 
-    // Unique User ID (🔹 Replace with actual dynamic user ID if needed)
-    private static final UUID USER_ID = Constants.USER_ID;
+    // 🔹 Your User ID (Replace with actual dynamic user ID if needed)
+    private static final String USER_ID = Constants.USER_ID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_braille_login);
+
         vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
         pinDisplay = findViewById(R.id.pinDisplay);
 
+        // Initialize Text-to-Speech
         textToSpeech = new TextToSpeech(this, status -> {
             if (status == TextToSpeech.SUCCESS) {
                 textToSpeech.setLanguage(Locale.ENGLISH);
@@ -48,10 +49,10 @@ public class BrailleLoginActivity extends AppCompatActivity {
             }
         });
 
-        // Fetch PIN from API
-        fetchUserPin(USER_ID.toString());
+        // 🔹 Fetch PIN from API
+        fetchUserPin(USER_ID);
 
-        // Initialize the button click listeners
+        // 🔹 Initialize the button click listeners
         findViewById(R.id.dot1).setOnClickListener(v -> onDotPressed(1));
         findViewById(R.id.dot2).setOnClickListener(v -> onDotPressed(2));
         findViewById(R.id.dot3).setOnClickListener(v -> onDotPressed(3));
@@ -60,7 +61,8 @@ public class BrailleLoginActivity extends AppCompatActivity {
 
     private void fetchUserPin(String userId) {
         OkHttpClient client = new OkHttpClient();
-        String url =  Constants.BASE_URL + "user/Registration/get-pin/" + userId;
+        String url = Constants.BASE_URL+"user/Registration/get-pin/" + userId;
+        Log.d("API_CALL", "Fetching PIN from: " + url);
 
         Request request = new Request.Builder()
                 .url(url)
@@ -70,27 +72,37 @@ public class BrailleLoginActivity extends AppCompatActivity {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.e("API_ERROR", "API Call Failed: " + e.getMessage());
                 runOnUiThread(() -> speakMessage("Failed to fetch PIN. Please check your connection."));
             }
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (response.isSuccessful() && response.body() != null) {
+                    String responseData = response.body().string();
+                    Log.d("API_RESPONSE", "Response Data: " + responseData);
                     try {
-                        String responseData = response.body().string();
                         JSONObject json = new JSONObject(responseData);
-                        userPin = json.getString("pin").trim();
-
-                        runOnUiThread(() -> speakMessage("PIN fetched successfully. Enter your four-digit PIN."));
+                        if (json.has("pin")) {
+                            userPin = json.getString("pin").trim();
+                            Log.d("PIN_FETCHED", "User PIN: " + userPin);
+                            runOnUiThread(() -> speakMessage("PIN fetched successfully. Enter your four-digit PIN."));
+                        } else {
+                            Log.e("JSON_ERROR", "PIN key missing in response: " + responseData);
+                            runOnUiThread(() -> speakMessage("PIN not found. Please try again."));
+                        }
                     } catch (Exception e) {
-                        runOnUiThread(() -> speakMessage("Error parsing PIN data."));
+                        Log.e("JSON_PARSE_ERROR", "Error parsing JSON: " + e.getMessage());
+                        runOnUiThread(() -> speakMessage("Error retrieving PIN."));
                     }
                 } else {
+                    Log.e("API_ERROR", "Failed to retrieve PIN. Response Code: " + response.code());
                     runOnUiThread(() -> speakMessage("Failed to retrieve PIN. Try again."));
                 }
             }
         });
     }
+
 
     private void onDotPressed(int dotNumber) {
         switch (dotNumber) {
@@ -124,16 +136,13 @@ public class BrailleLoginActivity extends AppCompatActivity {
     }
 
     private void authenticatePin() {
+        if (userPin.isEmpty()) {
+            speakMessage("PIN is not loaded yet. Please wait.");
+            return;
+        }
+
         if (pin.toString().trim().equals(userPin.trim())) {
-            speakMessage("Authentication successful. Moving to the payment feature section.");
-
-            // 🔹 Save User ID in SharedPreferences for future use
-            SharedPreferences prefs = getSharedPreferences(Constants.PREF_NAME, MODE_PRIVATE);
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putString("USER_ID", USER_ID.toString());
-            editor.apply();
-
-            Log.d("BrailleLoginActivity", "Saved USER_ID: " + USER_ID.toString());
+            speakMessage("Authentication successful. Moving to the payment section.");
 
             handler.postDelayed(() -> {
                 startActivity(new Intent(BrailleLoginActivity.this, OptionActivity.class));
