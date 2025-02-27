@@ -77,7 +77,7 @@ import java.util.UUID;
 
 public class Constants {
 
-    public static final String BASE_URL = "http://192.168.61.54:5234/";
+    public static final String BASE_URL = "http://192.168.179.142:5234/";
     public static final String PREF_NAME = "UserPref";
 //    private static final String USER_ID_KEY = "USER_ID";
 
