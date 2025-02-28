@@ -34,15 +34,15 @@ public class UPIActivity extends AppCompatActivity {
 
 
         // 🔹 Retrieve USER_ID from SharedPreferences
-        SharedPreferences prefs = getSharedPreferences(Constants.PREF_NAME, MODE_PRIVATE);
-        userId = prefs.getString("USER_ID", null);
-
-        if (userId != null) {
-            Log.d("PaymentOptionActivity", "Retrieved USER_ID: " + userId);
-
-        } else {
-            Log.e("PaymentOptionActivity", "USER_ID not found in SharedPreferences.");
-        }
+//        SharedPreferences prefs = getSharedPreferences(Constants.PREF_NAME, MODE_PRIVATE);
+//        userId = prefs.getString("USER_ID", null);
+//
+//        if (userId != null) {
+//            Log.d("PaymentOptionActivity", "Retrieved USER_ID: " + userId);
+//
+//        } else {
+//            Log.e("PaymentOptionActivity", "USER_ID not found in SharedPreferences.");
+//        }
 
         verifyUpiButton.setOnClickListener(v -> {
             String upiId = upiIdField.getText().toString().trim();

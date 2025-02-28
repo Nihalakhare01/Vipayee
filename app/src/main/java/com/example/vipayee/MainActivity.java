@@ -24,12 +24,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 //        Constants.loadUserId(this);
-
-        if (Constants.USER_ID != null) {
-            Log.d("MainActivity", "User UUID: " + Constants.USER_ID.toString());
-        } else {
-            Log.e("MainActivity", "User UUID not set yet!");
-        }
+//
+//        if (Constants.USER_ID != null) {
+//            Log.d("MainActivity", "User UUID: " + Constants.USER_ID.toString());
+//        } else {
+//            Log.e("MainActivity", "User UUID not set yet!");
+//        }
 
         // Initialize Text-to-Speech
         textToSpeech = new TextToSpeech(this, status -> {

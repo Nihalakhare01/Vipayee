@@ -28,16 +28,16 @@ public class PaymentOptionActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_payement_option);
 
-        // 🔹 Retrieve USER_ID from SharedPreferences
-        SharedPreferences prefs = getSharedPreferences(Constants.PREF_NAME, MODE_PRIVATE);
-        userId = prefs.getString("USER_ID", null);
-
-        if (userId != null) {
-            Log.d("PaymentOptionActivity", "Retrieved USER_ID: " + userId);
-
-        } else {
-            Log.e("PaymentOptionActivity", "USER_ID not found in SharedPreferences.");
-        }
+//        // 🔹 Retrieve USER_ID from SharedPreferences
+//        SharedPreferences prefs = getSharedPreferences(Constants.PREF_NAME, MODE_PRIVATE);
+//        userId = prefs.getString("USER_ID", null);
+//
+//        if (userId != null) {
+//            Log.d("PaymentOptionActivity", "Retrieved USER_ID: " + userId);
+//
+//        } else {
+//            Log.e("PaymentOptionActivity", "USER_ID not found in SharedPreferences.");
+//        }
 
         // Initialize Text-to-Speech
         textToSpeech = new TextToSpeech(this, status -> {
@@ -51,15 +51,17 @@ public class PaymentOptionActivity extends AppCompatActivity {
     // 🔹 Common method to navigate & pass USER_ID
     private void navigateToActivity(Class<?> targetActivity, String speechMessage) {
         Log.d("PaymentOptionActivity","called me");
-        if (userId != null) {
+        Intent intent = new Intent(PaymentOptionActivity.this, targetActivity);
+        startActivity(intent);
+        speakMessage("User ID found.");
 
-            Intent intent = new Intent(PaymentOptionActivity.this, targetActivity);
-            intent.putExtra("USER_ID", userId); // Pass USER_ID
-            Log.d("PaymentOptionActivity", "PaymentOptionActivity Sending USER_ID: " + userId);
-            startActivity(intent);
-        } else {
-            speakMessage("User ID not found. Please re-login.");
-        }
+
+//        if (userId != null) {
+//
+//            intent.putExtra("USER_ID", userId); // Pass USER_ID
+//            Log.d("PaymentOptionActivity", "PaymentOptionActivity Sending USER_ID: " + userId);
+//        } else {
+//        }
     }
 
 

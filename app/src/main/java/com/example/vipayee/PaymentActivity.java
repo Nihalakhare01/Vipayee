@@ -30,15 +30,15 @@ public class PaymentActivity extends AppCompatActivity {
 
 
         // 🔹 Retrieve USER_ID from SharedPreferences
-        SharedPreferences prefs = getSharedPreferences(Constants.PREF_NAME, MODE_PRIVATE);
-        userId = prefs.getString("USER_ID", null);
-
-        if (userId != null) {
-            Log.d("PaymentActivity", "Retrieved USER_ID: " + userId);
-
-        } else {
-            Log.e("PaymentActivity", "USER_ID not found in SharedPreferences.");
-        }
+//        SharedPreferences prefs = getSharedPreferences(Constants.PREF_NAME, MODE_PRIVATE);
+//        userId = prefs.getString("USER_ID", null);
+//
+//        if (userId != null) {
+//            Log.d("PaymentActivity", "Retrieved USER_ID: " + userId);
+//
+//        } else {
+//            Log.e("PaymentActivity", "USER_ID not found in SharedPreferences.");
+//        }
 
         paymentDetails = findViewById(R.id.paymentDetails);
         payButton = findViewById(R.id.payButton);
