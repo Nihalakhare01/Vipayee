@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.IOException;
 import java.util.Locale;
-import java.util.UUID;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -27,7 +26,7 @@ public class RegisterActivity extends AppCompatActivity {
     private ApiService apiService;
     private TextToSpeech textToSpeech;
 
-    private static final String TAG = "RegisterActivity"; // For logging
+    private static final String TAG = "RegisterActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +47,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(  Constants.BASE_URL+"user/")
+                .baseUrl(Constants.BASE_URL + "user/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -93,7 +92,6 @@ public class RegisterActivity extends AppCompatActivity {
                     editTextName.setText("");
                     editTextPhone.setText("");
                     editTextPin.setText("");
-
                 } else {
                     handleErrorResponse(response);
                 }
