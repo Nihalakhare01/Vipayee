@@ -10,7 +10,7 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Swipe Right for Transaction\n\nSwipe Left to Check Balance\n\nSwipe Up to Check Past Transactions"
+        android:text="Swipe Right for Transaction\n\nSwipe Left to Check Balance\n\nSwipe Up to Check Past Transactions\n\n Swipe Down to Get QR"
         android:textAlignment="center"
         android:textSize="20dp"
         android:textColor="#23486A"

@@ -5,6 +5,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 import java.util.List;
 
@@ -24,6 +25,9 @@ public interface ApiService {
 
     @POST("user/Transaction/process")
     Call<Void> processTransaction(@Body TransactionRequest request);
+
+    @GET("user/Registration/get-user")
+    Call<UserResponse> getUserByPhoneNumber(@Query("phoneNumber") String phoneNumber);
 
 
 }

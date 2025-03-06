@@ -68,7 +68,7 @@ public class OptionActivity extends AppCompatActivity {
                 } else {
                     // 🔹 Vertical Swipe (Up/Down)
                     if (deltaY > 0) {
-                        navigateToActivity(GenerateQRActivity.class, "TO Receive Payment");
+                        navigateToActivity(GenerateQRActivity.class, "TO Get QR");
                     } else {
                         navigateToActivity(TransactionHistoryBrailleLoginActivity.class, "Enter your 4 digit Login Pin to Know Past Transaction.");
                     }
@@ -86,8 +86,6 @@ public class OptionActivity extends AppCompatActivity {
 //        Log.d("OptionActivity", "OptionActivity Sending USER_ID: " + userId);
         startActivity(intent);
 //        if (userId != null) {
-//
-//
 //        } else {
 //            speakMessage("User ID not found. Please re-login.");
 //        }

@@ -53,7 +53,7 @@ public class PaymentOptionActivity extends AppCompatActivity {
         Log.d("PaymentOptionActivity","called me");
         Intent intent = new Intent(PaymentOptionActivity.this, targetActivity);
         startActivity(intent);
-        speakMessage("User ID found.");
+//        speakMessage("User ID found.");
 
 
 //        if (userId != null) {
@@ -66,13 +66,9 @@ public class PaymentOptionActivity extends AppCompatActivity {
 
 
     private void speakInstructions() {
-        String message = "Make Transaction here. Swipe Left for Scan the QR. Swipe Right for Pay By UPI Id.";
+        String message = "Make Transaction here. Swipe Left for Scan the QR. Swipe Right for Pay By Phone Number. Swipe Up to OPen VI Scan.";
         textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
     }
-
-
-
-
 
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
@@ -117,10 +113,10 @@ public class PaymentOptionActivity extends AppCompatActivity {
                 } else {
                     // 🔹 Vertical Swipe (Up/Down)
                     if (deltaY > 0) {
-                        navigateToActivity(QRScannerActivityVI.class, "ViScan");
+                        navigateToActivity(QRScannerActivityVI.class, "Opening VI Scan");
                     }
                     else {
-                        navigateToActivity(QRScannerActivityVI.class, "ViScan");
+                        navigateToActivity(QRScannerActivityVI.class, "Opening VI Scan.");
                     }
                 }
                 break;
@@ -128,7 +124,7 @@ public class PaymentOptionActivity extends AppCompatActivity {
         return super.onTouchEvent(motionEvent);
     }
 
-    private void speakMessage(String message) {
+ private void speakMessage(String message) {
         if (textToSpeech != null) {
             textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
         }

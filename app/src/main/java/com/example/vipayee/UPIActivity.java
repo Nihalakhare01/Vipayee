@@ -1,105 +1,103 @@
 package com.example.vipayee;
 
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class UPIActivity extends AppCompatActivity {
 
-    EditText upiIdField;
-    Button verifyUpiButton;
-    TextView nameDisplay;
-
-    private String userId;
-
-    private static final int UPI_VALIDATION = 101; // Request Code for UPI Validation
+    private EditText phoneNumberField;
+    private Button fetchUserButton;
+    private TextToSpeech textToSpeech;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upi);
 
-        upiIdField = findViewById(R.id.upiIdField);
-        verifyUpiButton = findViewById(R.id.verifyUpiButton);
-        nameDisplay = findViewById(R.id.nameDisplay);
+        phoneNumberField = findViewById(R.id.phoneNumberField);
+        fetchUserButton = findViewById(R.id.fetchUserButton);
 
-
-        // 🔹 Retrieve USER_ID from SharedPreferences
-//        SharedPreferences prefs = getSharedPreferences(Constants.PREF_NAME, MODE_PRIVATE);
-//        userId = prefs.getString("USER_ID", null);
-//
-//        if (userId != null) {
-//            Log.d("PaymentOptionActivity", "Retrieved USER_ID: " + userId);
-//
-//        } else {
-//            Log.e("PaymentOptionActivity", "USER_ID not found in SharedPreferences.");
-//        }
-
-        verifyUpiButton.setOnClickListener(v -> {
-            String upiId = upiIdField.getText().toString().trim();
-            if (!upiId.isEmpty()) {
-                validateUpiId(upiId);
+        // Initialize Text-to-Speech with Indian English accent
+        textToSpeech = new TextToSpeech(this, status -> {
+            if (status == TextToSpeech.SUCCESS) {
+                Locale locale = Locale.forLanguageTag("en-IN"); // Indian English
+                int result = textToSpeech.setLanguage(locale);
+                if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                    Log.e("TTS", "Indian English language not supported!");
+                } else {
+                    speak("Enter the mobile number to proceed with the transaction.");
+                }
             } else {
-                Toast.makeText(this, "Enter a valid UPI ID", Toast.LENGTH_SHORT).show();
+                Log.e("TTS", "Text-to-Speech initialization failed!");
+            }
+        });
+
+        fetchUserButton.setOnClickListener(v -> {
+            String phoneNumber = phoneNumberField.getText().toString().trim();
+            if (phoneNumber.length() == 10) {
+                fetchUserDetails(phoneNumber);
+            } else {
+                speak("Please enter a 10-digit number to make a transaction.");
+                Toast.makeText(UPIActivity.this, "Enter a valid phone number", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void validateUpiId(String upiId) {
-        Uri uri = Uri.parse("upi://pay")
-                .buildUpon()
-                .appendQueryParameter("pa", upiId) // Payee UPI ID
-                .appendQueryParameter("pn", "Validation Check") // Payee Name
-                .appendQueryParameter("am", "0.01") // Small amount for validation
-                .appendQueryParameter("cu", "INR") // Currency
-                .appendQueryParameter("tn", "UPI ID Verification") // Transaction Note
-                .build();
+    private void fetchUserDetails(String phoneNumber) {
+        ApiService apiService = RetrofitClient.getApiService();
 
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(uri);
+        Call<UserResponse> call = apiService.getUserByPhoneNumber(phoneNumber);
+        call.enqueue(new Callback<UserResponse>() {
+            @Override
+            public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    UserResponse user = response.body();
+                    speak("User fetched successfully. Moving to the next page.");
+                    Intent intent = new Intent(UPIActivity.this, UPITransactionActivity.class);
+                    intent.putExtra("userId", user.getId());
+                    intent.putExtra("payeeName", user.getName());
+                    startActivity(intent);
+                } else {
+                    speak("User not found. Please enter a valid phone number.");
+                    Toast.makeText(UPIActivity.this, "User not found", Toast.LENGTH_SHORT).show();
+                }
+            }
 
-        try {
-            startActivityForResult(intent, UPI_VALIDATION);
-        } catch (ActivityNotFoundException e) {
-            Toast.makeText(this, "No UPI app found!", Toast.LENGTH_SHORT).show();
+            @Override
+            public void onFailure(Call<UserResponse> call, Throwable t) {
+                Log.e("API_ERROR", "Failed to fetch user details", t);
+                speak("API error. Please try again.");
+                Toast.makeText(UPIActivity.this, "API Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void speak(String message) {
+        if (textToSpeech != null) {
+            textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
         }
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == UPI_VALIDATION) {
-            if (data != null) {
-                String response = data.getStringExtra("response");
-                if (response != null && response.toLowerCase().contains("success")) {
-                    String accountHolderName = extractNameFromResponse(response);
-                    nameDisplay.setText("Account Holder: " + accountHolderName);
-                    nameDisplay.setVisibility(TextView.VISIBLE);
-
-                    // Move to EnterAmountActivity
-                    Intent intent = new Intent(this, AmountActivity.class);
-                    intent.putExtra("upiId", upiIdField.getText().toString());
-                    intent.putExtra("upiName", accountHolderName);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(this, "Invalid UPI ID", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                Toast.makeText(this, "Transaction Cancelled", Toast.LENGTH_SHORT).show();
-            }
+    protected void onDestroy() {
+        if (textToSpeech != null) {
+            textToSpeech.stop();
+            textToSpeech.shutdown();
         }
-    }
-
-    private String extractNameFromResponse(String response) {
-        return "User Name"; // Normally, you'd parse the response to extract the name
+        super.onDestroy();
     }
 }

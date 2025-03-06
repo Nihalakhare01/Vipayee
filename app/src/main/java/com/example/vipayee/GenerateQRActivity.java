@@ -3,6 +3,7 @@ package com.example.vipayee;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -22,8 +23,11 @@ import com.google.zxing.common.BitMatrix;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Locale;
+
 public class GenerateQRActivity extends AppCompatActivity {
     private ImageView qrImageView;
+    private TextToSpeech textToSpeech;
     private static final String USER_ID = Constants.USER_ID;
     private static final String API_URL = Constants.BASE_URL + "user/Registration/GetUserFullName/" + USER_ID;
     private String fullName;
@@ -34,6 +38,18 @@ public class GenerateQRActivity extends AppCompatActivity {
         setContentView(R.layout.activity_generate_qr);
 
         qrImageView = findViewById(R.id.qrImageView);
+
+        // Initialize Text-to-Speech
+        textToSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    textToSpeech.setLanguage(Locale.US);
+                } else {
+                    Log.e("TTS", "Initialization failed!");
+                }
+            }
+        });
 
         // Fetch user details before generating the QR code
         fetchUserDetails();
@@ -71,6 +87,7 @@ public class GenerateQRActivity extends AppCompatActivity {
             Bitmap qrCodeBitmap = generateQRCodeBitmap(USER_ID, fullName);
             if (qrCodeBitmap != null) {
                 qrImageView.setImageBitmap(qrCodeBitmap);
+                speak("QR code generated successfully."); // ✅ Speak success message
             } else {
                 Toast.makeText(this, "Failed to generate QR code", Toast.LENGTH_SHORT).show();
             }
@@ -102,5 +119,20 @@ public class GenerateQRActivity extends AppCompatActivity {
             Log.e("QRCodeGenerator", "QR Code generation failed", e);
             return null;
         }
+    }
+
+    private void speak(String message) {
+        if (textToSpeech != null) {
+            textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (textToSpeech != null) {
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+        }
+        super.onDestroy();
     }
 }
