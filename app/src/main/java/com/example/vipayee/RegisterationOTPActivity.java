@@ -13,11 +13,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-
 import com.google.android.gms.auth.api.phone.SmsRetriever;
 import com.google.android.gms.auth.api.phone.SmsRetrieverClient;
 import com.google.android.material.textfield.TextInputEditText;
-
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -32,7 +30,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class RegisterationOTPActivity extends AppCompatActivity {
-
     SmsBroadcastReceiver smsBroadcastReceiver;
     private TextToSpeech textToSpeech;
     TextInputEditText etOTP;

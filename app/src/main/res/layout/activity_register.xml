@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -6,37 +5,28 @@
     android:padding="20dp">
 
     <EditText
-        android:id="@+id/editText1"
+        android:id="@+id/editTextFullName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Full Name"
-        android:inputType="textPersonName" />
+        android:hint="Full Name" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/editTextPhone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Phone Number"
         android:inputType="phone" />
 
     <EditText
-        android:id="@+id/editText3"
+        android:id="@+id/editTextPin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="PIN"
         android:inputType="numberPassword" />
 
     <Button
-        android:id="@+id/buttonSubmit"
+        android:id="@+id/buttonRegister"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Register"
-        android:onClick="registerUser" />
-
-
-    <Button
-        android:id="@+id/fetchUserIdButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Fetch User ID" />
+        android:text="Register" />
 </LinearLayout>

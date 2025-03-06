@@ -1,5 +1,6 @@
 package com.example.vipayee;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -10,8 +11,8 @@ import retrofit2.http.Query;
 import java.util.List;
 
 public interface ApiService {
-    @POST("Registration/register")
-    Call<Void> registerUser(@Body User user);
+    @POST("user/Registration/register")
+    Call<ApiResponse> registerUser(@Body User user);
 
     @GET("Registration/users")
     Call<List<User>> getAllUsers();

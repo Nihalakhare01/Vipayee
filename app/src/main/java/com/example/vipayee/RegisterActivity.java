@@ -1,31 +1,32 @@
 package com.example.vipayee;
 
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.IOException;
-import java.util.Locale;
+import com.example.vipayee.ApiResponse;
+import com.example.vipayee.ApiService;
+import com.example.vipayee.R;
+import com.example.vipayee.RegisterationOTPActivity;
+import com.example.vipayee.RetrofitClient;
+import com.example.vipayee.User;
 
+import java.util.Locale;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RegisterActivity extends AppCompatActivity {
-
-    private EditText editTextName, editTextPhone, editTextPin;
-    private Button buttonSubmit;
-    private ApiService apiService;
+    private EditText fullNameEditText, phoneEditText, pinEditText;
+    private Button registerButton;
     private TextToSpeech textToSpeech;
-
     private static final String TAG = "RegisterActivity";
 
     @Override
@@ -33,94 +34,90 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        editTextName = findViewById(R.id.editText1);
-        editTextPhone = findViewById(R.id.editText2);
-        editTextPin = findViewById(R.id.editText3);
-        buttonSubmit = findViewById(R.id.buttonSubmit);
+        fullNameEditText = findViewById(R.id.editTextFullName);
+        phoneEditText = findViewById(R.id.editTextPhone);
+        pinEditText = findViewById(R.id.editTextPin);
+        registerButton = findViewById(R.id.buttonRegister);
 
-        // Initialize Text-to-Speech
+        // Initialize TTS
         textToSpeech = new TextToSpeech(this, status -> {
             if (status == TextToSpeech.SUCCESS) {
                 textToSpeech.setLanguage(Locale.ENGLISH);
-                speakInstructions();
             }
         });
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.BASE_URL + "user/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        apiService = retrofit.create(ApiService.class);
-
-        buttonSubmit.setOnClickListener(v -> registerUser());
-    }
-
-    private void speakInstructions() {
-        String message = "Please enter the details.";
-        textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
+        registerButton.setOnClickListener(v -> registerUser());
     }
 
     private void registerUser() {
-        String fullName = editTextName.getText().toString().trim();
-        String phoneNumber = editTextPhone.getText().toString().trim();
-        String pin = editTextPin.getText().toString().trim();
+        String fullName = fullNameEditText.getText().toString().trim();
+        String phone = phoneEditText.getText().toString().trim();
+        String pin = pinEditText.getText().toString().trim();
 
-        if (fullName.isEmpty() || phoneNumber.isEmpty() || pin.isEmpty()) {
-            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+        if (fullName.isEmpty() || phone.isEmpty() || pin.isEmpty()) {
+            speakAndToast("All fields are required!");
             return;
         }
 
-        User user = new User(fullName, phoneNumber, pin);
+        User user = new User(fullName, phone, pin);
+        ApiService apiService = RetrofitClient.getApiService();
+        Call<ApiResponse> call = apiService.registerUser(user);
 
-        Log.d(TAG, "Registering user: " + fullName + ", Phone: " + phoneNumber);
-
-        apiService.registerUser(user).enqueue(new Callback<Void>() {
+        call.enqueue(new Callback<ApiResponse>() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) {
-                    Log.d(TAG, "User registered successfully");
-                    speak("User Registered Successfully");
-                    Toast.makeText(RegisterActivity.this, "User Registered Successfully", Toast.LENGTH_SHORT).show();
+            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    String message = response.body().getMessage();
+                    Log.d(TAG, "Raw Success Response: " + message);
 
-                    // Start OTP activity and pass the phone number
-                    Intent intent = new Intent(RegisterActivity.this, RegisterationOTPActivity.class);
-                    intent.putExtra("PHONE_NUMBER", phoneNumber);
-                    startActivity(intent);
-
-                    // Clear fields
-                    editTextName.setText("");
-                    editTextPhone.setText("");
-                    editTextPin.setText("");
+                    if (message.contains("User registered successfully")) {
+                        // Speak only the user-friendly success message
+                        String successMessage = "User registered successfully.";
+                        speakAndToast(successMessage);
+                        moveToOTPActivity(phone);
+                    } else if (message.contains("Phone number already exists")) {
+                        // Speak a friendly message for duplicate phone numbers
+                        String duplicateMessage = "Phone number already exists. Please enter a valid number.";
+                        speakAndToast(duplicateMessage);
+                        Log.d(TAG, "User-friendly message: " + duplicateMessage);
+                    } else {
+                        // For any other success responses, show a default error message
+                        String defaultMessage = "Registration failed. Please try again.";
+                        speakAndToast(defaultMessage);
+                        Log.e(TAG, "Unhandled success message: " + message);
+                    }
                 } else {
-                    handleErrorResponse(response);
+                    // Log the response code and use a generic error message instead of the raw error body
+                    Log.e(TAG, "Error Response Code: " + response.code());
+                    String userFriendlyError = "Registration failed. Please try again.";
+                    speakAndToast(userFriendlyError);
                 }
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Log.e(TAG, "Registration failed", t);
-                Toast.makeText(RegisterActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
+                String networkError = "Network error! Please try again.";
+                speakAndToast(networkError);
+                Log.e(TAG, "Failure: " + t.getMessage());
             }
+
         });
     }
 
-    private void handleErrorResponse(Response<?> response) {
-        try {
-            String errorMessage = response.errorBody() != null ? response.errorBody().string() : "Unknown error";
-            Log.e(TAG, "Registration failed: " + errorMessage);
-            speak("Registration Failed: " + errorMessage);
-            Toast.makeText(RegisterActivity.this, "Registration Failed: " + errorMessage, Toast.LENGTH_SHORT).show();
-        } catch (IOException e) {
-            Log.e(TAG, "Error reading error response", e);
-            e.printStackTrace();
+    private void speakAndToast(String message) {
+        Toast.makeText(RegisterActivity.this, message, Toast.LENGTH_SHORT).show();
+        if (textToSpeech != null) {
+            textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
         }
     }
 
-    private void speak(String text) {
-        if (textToSpeech != null) {
-            textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
-        }
+    private void moveToOTPActivity(String phoneNumber) {
+        new android.os.Handler().postDelayed(() -> {
+            Intent intent = new Intent(RegisterActivity.this, RegisterationOTPActivity.class);
+//            intent.putExtra("phoneNumber", phoneNumber);
+            intent.putExtra("PHONE_NUMBER", phoneNumber);
+            startActivity(intent);
+            finish(); // Close RegisterActivity
+        }, 2000); // Delay to let TTS complete
     }
 
     @Override
@@ -132,144 +129,3 @@ public class RegisterActivity extends AppCompatActivity {
         super.onDestroy();
     }
 }
-
-
-
-
-
-//package com.example.vipayee;
-//
-//import android.content.Intent;
-//import android.os.Bundle;
-//import android.speech.tts.TextToSpeech;
-//import android.util.Log;
-//import android.widget.Button;
-//import android.widget.EditText;
-//import android.widget.Toast;
-//
-//import androidx.appcompat.app.AppCompatActivity;
-//
-//import java.io.IOException;
-//import java.util.Locale;
-//import java.util.UUID;
-//
-//import retrofit2.Call;
-//import retrofit2.Callback;
-//import retrofit2.Response;
-//import retrofit2.Retrofit;
-//import retrofit2.converter.gson.GsonConverterFactory;
-//
-//public class RegisterActivity extends AppCompatActivity {
-//
-//    private EditText editTextName, editTextPhone, editTextPin;
-//    private Button buttonSubmit;
-//    private ApiService apiService;
-//    private TextToSpeech textToSpeech;
-//
-//    private static final String TAG = "RegisterActivity"; // For logging
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_register);
-//
-//        editTextName = findViewById(R.id.editText1);
-//        editTextPhone = findViewById(R.id.editText2);
-//        editTextPin = findViewById(R.id.editText3);
-//        buttonSubmit = findViewById(R.id.buttonSubmit);
-//
-//        // Initialize Text-to-Speech
-//        textToSpeech = new TextToSpeech(this, status -> {
-//            if (status == TextToSpeech.SUCCESS) {
-//                textToSpeech.setLanguage(Locale.ENGLISH);
-//                speakInstructions();
-//            }
-//        });
-//
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(Constants.BASE_URL+"user/")
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build();
-//
-//        apiService = retrofit.create(ApiService.class);
-//
-//        buttonSubmit.setOnClickListener(v -> registerUser());
-//    }
-//
-//    private void speakInstructions() {
-//        String message = "Please enter the details.";
-//        textToSpeech.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
-//    }
-//
-//    private void registerUser() {
-//        String fullName = editTextName.getText().toString().trim();
-//        String phoneNumber = editTextPhone.getText().toString().trim();
-//        String pin = editTextPin.getText().toString().trim();
-//
-//        if (fullName.isEmpty() || phoneNumber.isEmpty() || pin.isEmpty()) {
-//            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//
-//        User user = new User(fullName, phoneNumber, pin);
-//
-//        Log.d(TAG, "Registering user: " + fullName + ", Phone: " + phoneNumber);
-//
-//        apiService.registerUser(user).enqueue(new Callback<Void>() {
-//            @Override
-//            public void onResponse(Call<Void> call, Response<Void> response) {
-//                if (response.isSuccessful()) {
-//                    Log.d(TAG, "User registered successfully");
-//                    speak("User Registered Successfully");
-//                    Toast.makeText(RegisterActivity.this, "User Registered Successfully", Toast.LENGTH_SHORT).show();
-//
-//                    // Start OTP activity and pass the phone number
-//                    Intent intent = new Intent(RegisterActivity.this, RegisterationOTPActivity.class);
-//                    intent.putExtra("PHONE_NUMBER", phoneNumber);
-//                    startActivity(intent);
-//
-//                    // Clear fields
-//                    editTextName.setText("");
-//                    editTextPhone.setText("");
-//                    editTextPin.setText("");
-//
-//                } else {
-//                    handleErrorResponse(response);
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Void> call, Throwable t) {
-//                Log.e(TAG, "Registration failed", t);
-//                Toast.makeText(RegisterActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
-//
-//    private void handleErrorResponse(Response<?> response) {
-//        try {
-//            String errorMessage = response.errorBody() != null ? response.errorBody().string() : "Unknown error";
-//            Log.e(TAG, "Registration failed: " + errorMessage);
-//            speak("Registration Failed: " + errorMessage);
-//            Toast.makeText(RegisterActivity.this, "Registration Failed: " + errorMessage, Toast.LENGTH_SHORT).show();
-//        } catch (IOException e) {
-//            Log.e(TAG, "Error reading error response", e);
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    private void speak(String text) {
-//        if (textToSpeech != null) {
-//            textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
-//        }
-//    }
-//
-//    @Override
-//    protected void onDestroy() {
-//        if (textToSpeech != null) {
-//            textToSpeech.stop();
-//            textToSpeech.shutdown();
-//        }
-//        super.onDestroy();
-//    }
-//}
