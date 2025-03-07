@@ -11,7 +11,7 @@ import retrofit2.http.Query;
 import java.util.List;
 
 public interface ApiService {
-    @POST("user/Registration/register")
+    @POST("register")
     Call<ApiResponse> registerUser(@Body User user);
 
     @GET("Registration/users")
