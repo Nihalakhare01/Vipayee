@@ -40,7 +40,6 @@
             </intent-filter>
         </receiver>
 
-
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -53,9 +52,6 @@
 
 <!--        <uses-feature android:name="android.hardware.camera" />-->
 <!--        <uses-feature android:name="android.hardware.camera.autofocus" />-->
-
-
-
 
         <activity android:name=".LoginActivity"/>
         <activity android:name=".RegisterActivity"/>
@@ -77,10 +73,8 @@
         <activity android:name=".GenerateQRActivity"/>
         <activity android:name=".QRScannerActivityVI"/>
         <activity android:name=".PaymentActivityVI"/>
+        <activity android:name=".LoginIfUserExist"/>
         <activity android:name=".UPITransactionActivity"/>
-
-
-
     </application>
 
 </manifest>

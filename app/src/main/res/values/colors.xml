@@ -6,5 +6,6 @@
     <color name="red">#FF0000</color>
     <color name="purple" tools:ignore="ResourceCycle">@color/purple</color>
     <color name="grey" tools:ignore="ResourceCycle">@color/grey</color>
+    <color name="teal_700">#00796B</color>
 
 </resources>

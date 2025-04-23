@@ -23,6 +23,7 @@ public class User {
     public String getUserID() { return userID; }
     public String getFullName() { return fullName; }
     public String getPhoneNumber() { return phoneNumber; }
+
     public String getPin() { return pin; }
     public String getCreatedAt() { return createdAt; }
     public Balance getBalance() { return balance; }

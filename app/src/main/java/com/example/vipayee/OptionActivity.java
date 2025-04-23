@@ -23,16 +23,6 @@ public class OptionActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_option);
 
-        // 🔹 Retrieve USER_ID from SharedPreferences
-//        SharedPreferences prefs = getSharedPreferences(Constants.PREF_NAME, MODE_PRIVATE);
-//        userId = prefs.getString("USER_ID", null);
-
-//        if (userId != null) {
-//            Log.d("OptionActivity", "Retrieved USER_ID: " + userId);
-//
-//        } else {
-//            Log.e("OptionActivity", "USER_ID not found in SharedPreferences.");
-//        }
 
         // Initialize Text-to-Speech
         textToSpeech = new TextToSpeech(this, status -> {

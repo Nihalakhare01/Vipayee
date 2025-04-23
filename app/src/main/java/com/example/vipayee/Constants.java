@@ -67,7 +67,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 public class Constants {
-    public static final String BASE_URL = "http://192.168.179.142:5234/";
+    public static final String BASE_URL = "http://192.168.174.142:5234/";
     public static final String PREF_NAME = "UserPref";
     public static String USER_ID = null;
 
