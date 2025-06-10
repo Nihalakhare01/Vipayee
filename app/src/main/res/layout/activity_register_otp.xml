@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    tools:context=".YourActivityName">
+
+    <!-- Heading: Verification Code -->
+    <TextView
+        android:id="@+id/tvVerificationCode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Verification Code"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:layout_marginTop="120dp"
+        android:layout_marginStart="40dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Subtext -->
+    <TextView
+        android:id="@+id/tvInstruction"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="We have sent the verification code to your Phone number"
+        android:textColor="#B6B6B6"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:layout_marginTop="44dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        app:layout_constraintTop_toBottomOf="@id/tvVerificationCode"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- OTP Input Field -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/otpInputLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:boxBackgroundMode="outline"
+        app:boxStrokeColor="#E8ECF4"
+        app:layout_constraintTop_toBottomOf="@id/tvInstruction"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etOTP"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:hint="Enter OTP"
+            android:inputType="number" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Confirm Button -->
+    <Button
+        android:id="@+id/btnVerifyOTP"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="40dp"
+        android:text="Confirm"
+        android:textColor="#333333"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:backgroundTint="#FFEA00"
+        app:cornerRadius="50dp"
+        app:strokeColor="#FBBD20"
+        app:strokeWidth="1dp"
+        app:layout_constraintTop_toBottomOf="@id/otpInputLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

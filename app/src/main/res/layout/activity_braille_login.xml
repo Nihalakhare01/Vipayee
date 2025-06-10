@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/braille_keyboard"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFefB"
+    android:backgroundTint="@android:color/white">
+
+    <!-- Circle Button -->
+
+    <TextView
+        android:id="@+id/brailleLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="68dp"
+        android:text="Braille Login"
+        android:textColor="@android:color/black"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/pinDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="_ _ _ _"
+        android:textColor="@color/black"
+        android:textSize="55sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.182" />
+
+    <View
+        android:id="@+id/dot1"
+        android:layout_width="175dp"
+        android:layout_height="250dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="100dp"
+        android:background="@drawable/yellow_card"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/brailleLogin" />
+
+    <View
+        android:id="@+id/dot2"
+        android:layout_width="175dp"
+        android:layout_height="250dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="56dp"
+        android:background="@drawable/yellow_card"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.035"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <View
+        android:id="@+id/dot3"
+        android:layout_width="175dp"
+        android:layout_height="250dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/yellow_card"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.408" />
+
+    <View
+        android:id="@+id/dot4"
+        android:layout_width="175dp"
+        android:layout_height="250dp"
+        android:layout_marginStart="192dp"
+        android:layout_marginBottom="56dp"
+        android:background="@drawable/yellow_card"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.181"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+    <!--<?xml version="1.0" encoding="utf-8"?>-->
+    <!--<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+    <!--    xmlns:tools="http://schemas.android.com/tools"-->
+    <!--    android:id="@+id/braille_keyboard"-->
+    <!--    android:layout_width="match_parent"-->
+    <!--    android:layout_height="match_parent"-->
+    <!--    android:background="#FFFefB"-->
+    <!--    android:backgroundTint="@android:color/white"-->
+
+    <!--    >-->
+
+
+    <!--    &lt;!&ndash; Circle Button &ndash;&gt;-->
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/brailleLogin"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginTop="68dp"-->
+    <!--        android:text="Braille Login"-->
+    <!--        android:textColor="@android:color/black"-->
+    <!--        android:textSize="40sp"-->
+    <!--        android:textStyle="bold"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent"-->
+    <!--        app:layout_constraintVertical_bias="0.0" />-->
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/pinDisplay"-->
+    <!--        android:layout_width="141dp"-->
+    <!--        android:layout_height="84dp"-->
+    <!--        android:text="_ _ _ _"-->
+    <!--        android:textColor="@color/black"-->
+    <!--        android:textSize="55sp"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent"-->
+    <!--        app:layout_constraintVertical_bias="0.182" />-->
+
+
+    <!--    <View-->
+    <!--        android:id="@+id/dot1"-->
+    <!--        android:layout_width="175dp"-->
+    <!--        android:layout_height="250dp"-->
+    <!--        android:layout_marginStart="12dp"-->
+    <!--        android:layout_marginTop="100dp"-->
+    <!--        android:background="@drawable/yellow_card"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/brailleLogin" />-->
+
+    <!--    <View-->
+    <!--        android:id="@+id/dot2"-->
+    <!--        android:layout_width="175dp"-->
+    <!--        android:layout_height="250dp"-->
+    <!--        android:layout_marginStart="8dp"-->
+    <!--        android:layout_marginBottom="56dp"-->
+    <!--        android:background="@drawable/yellow_card"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintHorizontal_bias="0.035"-->
+    <!--        app:layout_constraintStart_toStartOf="parent" />-->
+
+    <!--    <View-->
+    <!--        android:id="@+id/dot3"-->
+    <!--        android:layout_width="175dp"-->
+    <!--        android:layout_height="250dp"-->
+    <!--        android:layout_marginEnd="16dp"-->
+    <!--        android:background="@drawable/yellow_card"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent"-->
+    <!--        app:layout_constraintVertical_bias="0.408" />-->
+
+    <!--    <View-->
+    <!--        android:id="@+id/dot4"-->
+    <!--        android:layout_width="175dp"-->
+    <!--        android:layout_height="250dp"-->
+    <!--        android:layout_marginStart="192dp"-->
+    <!--        android:layout_marginBottom="56dp"-->
+    <!--        android:background="@drawable/yellow_card"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintHorizontal_bias="0.181"-->
+    <!--        app:layout_constraintStart_toStartOf="parent" />-->
+
+    <!--</androidx.constraintlayout.widget.ConstraintLayout>-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!--    &lt;!&ndash;<?xml version="1.0" encoding="utf-8"?>&ndash;&gt;-->
+    <!--    &lt;!&ndash;<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"&ndash;&gt;-->
+    <!--    &lt;!&ndash;    xmlns:app="http://schemas.android.com/apk/res-auto"&ndash;&gt;-->
+    <!--    &lt;!&ndash;    xmlns:tools="http://schemas.android.com/tools"&ndash;&gt;-->
+    <!--    &lt;!&ndash;    android:id="@+id/main"&ndash;&gt;-->
+    <!--    &lt;!&ndash;    android:layout_width="match_parent"&ndash;&gt;-->
+    <!--    &lt;!&ndash;    android:layout_height="match_parent"&ndash;&gt;-->
+    <!--    &lt;!&ndash;    android:background="@drawable/rupee"&ndash;&gt;-->
+    <!--    &lt;!&ndash;    tools:context=".BrailleLoginActivity">&ndash;&gt;-->
+
+
+
+
+    <!--    &lt;!&ndash;    &lt;!&ndash; Buttons for Braille Keypad &ndash;&gt;&ndash;&gt;-->
+    <!--    &lt;!&ndash;    <TextView&ndash;&gt;-->
+    <!--    &lt;!&ndash;        android:id="@+id/pinDisplay"&ndash;&gt;-->
+    <!--    &lt;!&ndash;        android:layout_width="wrap_content"&ndash;&gt;-->
+    <!--    &lt;!&ndash;        android:layout_height="wrap_content"&ndash;&gt;-->
+    <!--    &lt;!&ndash;        android:text="_ _ _ _"&ndash;&gt;-->
+    <!--    &lt;!&ndash;        android:textColor="@color/black"&ndash;&gt;-->
+    <!--    &lt;!&ndash;        android:textSize="55sp"&ndash;&gt;-->
+    <!--    &lt;!&ndash;        app:layout_constraintBottom_toBottomOf="parent"&ndash;&gt;-->
+    <!--    &lt;!&ndash;        app:layout_constraintEnd_toEndOf="parent"&ndash;&gt;-->
+    <!--    &lt;!&ndash;        app:layout_constraintHorizontal_bias="0.498"&ndash;&gt;-->
+    <!--    &lt;!&ndash;        app:layout_constraintStart_toStartOf="parent"&ndash;&gt;-->
+    <!--    &lt;!&ndash;        app:layout_constraintTop_toTopOf="parent"&ndash;&gt;-->
+    <!--    &lt;!&ndash;        app:layout_constraintVertical_bias="0.064" />&ndash;&gt;-->
+
+    <!--    &lt;!&ndash;    <androidx.constraintlayout.widget.ConstraintLayout&ndash;&gt;-->
+    <!--    &lt;!&ndash;        android:layout_width="407dp"&ndash;&gt;-->
+    <!--    &lt;!&ndash;        android:layout_height="360dp"&ndash;&gt;-->
+    <!--    &lt;!&ndash;        app:layout_constraintBottom_toBottomOf="parent"&ndash;&gt;-->
+    <!--    &lt;!&ndash;        app:layout_constraintEnd_toEndOf="parent"&ndash;&gt;-->
+    <!--    &lt;!&ndash;        app:layout_constraintHorizontal_bias="1.0"&ndash;&gt;-->
+    <!--    &lt;!&ndash;        app:layout_constraintStart_toStartOf="parent"&ndash;&gt;-->
+    <!--    &lt;!&ndash;        app:layout_constraintTop_toTopOf="parent"&ndash;&gt;-->
+    <!--    &lt;!&ndash;        app:layout_constraintVertical_bias="0.853">&ndash;&gt;-->
+
+    <!--    &lt;!&ndash;        <Button&ndash;&gt;-->
+    <!--    &lt;!&ndash;            android:id="@+id/dot1"&ndash;&gt;-->
+    <!--    &lt;!&ndash;            android:layout_width="200dp"&ndash;&gt;-->
+    <!--    &lt;!&ndash;            android:layout_height="150dp"&ndash;&gt;-->
+    <!--    &lt;!&ndash;            android:background="@drawable/round_login_pin"&ndash;&gt;-->
+    <!--    &lt;!&ndash;            app:layout_constraintBottom_toBottomOf="parent"&ndash;&gt;-->
+    <!--    &lt;!&ndash;            app:layout_constraintEnd_toEndOf="parent"&ndash;&gt;-->
+    <!--    &lt;!&ndash;            app:layout_constraintHorizontal_bias="0.0"&ndash;&gt;-->
+    <!--    &lt;!&ndash;            app:layout_constraintStart_toStartOf="parent"&ndash;&gt;-->
+    <!--    &lt;!&ndash;            app:layout_constraintTop_toTopOf="parent"&ndash;&gt;-->
+    <!--    &lt;!&ndash;            app:layout_constraintVertical_bias="0.246" />&ndash;&gt;-->
+
+    <!--    &lt;!&ndash;        <Button&ndash;&gt;-->
+    <!--    &lt;!&ndash;            android:id="@+id/dot2"&ndash;&gt;-->
+    <!--    &lt;!&ndash;            android:layout_width="200dp"&ndash;&gt;-->
+    <!--    &lt;!&ndash;            android:layout_height="150dp"&ndash;&gt;-->
+    <!--    &lt;!&ndash;            android:layout_marginEnd="44dp"&ndash;&gt;-->
+    <!--    &lt;!&ndash;            android:background="@drawable/round_login_pin"&ndash;&gt;-->
+    <!--    &lt;!&ndash;            app:layout_constraintBottom_toBottomOf="parent"&ndash;&gt;-->
+    <!--    &lt;!&ndash;            app:layout_constraintEnd_toEndOf="parent"&ndash;&gt;-->
+    <!--    &lt;!&ndash;            app:layout_constraintEnd_toStartOf="@+id/dot3"&ndash;&gt;-->
+    <!--    &lt;!&ndash;            app:layout_constraintHorizontal_bias="0.0"&ndash;&gt;-->
+    <!--    &lt;!&ndash;            app:layout_constraintStart_toStartOf="parent"&ndash;&gt;-->
+    <!--    &lt;!&ndash;            app:layout_constraintTop_toTopOf="parent"&ndash;&gt;-->
+    <!--    &lt;!&ndash;            app:layout_constraintVertical_bias="1.0" />&ndash;&gt;-->
+
+    <!--    &lt;!&ndash;        <Button&ndash;&gt;-->
+    <!--    &lt;!&ndash;            android:id="@+id/dot3"&ndash;&gt;-->
+    <!--    &lt;!&ndash;            android:layout_width="200dp"&ndash;&gt;-->
+    <!--    &lt;!&ndash;            android:layout_height="150dp"&ndash;&gt;-->
+    <!--    &lt;!&ndash;            android:background="@drawable/round_login_pin"&ndash;&gt;-->
+    <!--    &lt;!&ndash;            app:layout_constraintBottom_toBottomOf="parent"&ndash;&gt;-->
+    <!--    &lt;!&ndash;            app:layout_constraintEnd_toEndOf="parent"&ndash;&gt;-->
+    <!--    &lt;!&ndash;            app:layout_constraintHorizontal_bias="0.995"&ndash;&gt;-->
+    <!--    &lt;!&ndash;            app:layout_constraintStart_toStartOf="parent"&ndash;&gt;-->
+    <!--    &lt;!&ndash;            app:layout_constraintTop_toTopOf="parent"&ndash;&gt;-->
+    <!--    &lt;!&ndash;            app:layout_constraintVertical_bias="0.246" />&ndash;&gt;-->
+
+    <!--    &lt;!&ndash;        <Button&ndash;&gt;-->
+    <!--    &lt;!&ndash;            android:id="@+id/dot4"&ndash;&gt;-->
+    <!--    &lt;!&ndash;            android:layout_width="200dp"&ndash;&gt;-->
+    <!--    &lt;!&ndash;            android:layout_height="150dp"&ndash;&gt;-->
+    <!--    &lt;!&ndash;            android:background="@drawable/round_login_pin"&ndash;&gt;-->
+    <!--    &lt;!&ndash;            app:layout_constraintBottom_toBottomOf="parent"&ndash;&gt;-->
+    <!--    &lt;!&ndash;            app:layout_constraintEnd_toEndOf="parent"&ndash;&gt;-->
+    <!--    &lt;!&ndash;            app:layout_constraintHorizontal_bias="1.0"&ndash;&gt;-->
+    <!--    &lt;!&ndash;            app:layout_constraintStart_toStartOf="parent"&ndash;&gt;-->
+    <!--    &lt;!&ndash;            app:layout_constraintTop_toTopOf="parent"&ndash;&gt;-->
+    <!--    &lt;!&ndash;            app:layout_constraintVertical_bias="1.0" />&ndash;&gt;-->
+    <!--    &lt;!&ndash;    </androidx.constraintlayout.widget.ConstraintLayout>&ndash;&gt;-->
+
+
+
+
+    <!--    &lt;!&ndash;    &lt;!&ndash; Button for Next (Submit or Confirm the PIN) &ndash;&gt;&ndash;&gt;-->
+    <!--    &lt;!&ndash;    &lt;!&ndash;    <Button&ndash;&gt;&ndash;&gt;-->
+    <!--    &lt;!&ndash;    &lt;!&ndash;        android:id="@+id/button"&ndash;&gt;&ndash;&gt;-->
+    <!--    &lt;!&ndash;    &lt;!&ndash;        android:layout_width="408dp"&ndash;&gt;&ndash;&gt;-->
+    <!--    &lt;!&ndash;    &lt;!&ndash;        android:layout_height="63dp"&ndash;&gt;&ndash;&gt;-->
+    <!--    &lt;!&ndash;    &lt;!&ndash;        android:text="Next"&ndash;&gt;&ndash;&gt;-->
+    <!--    &lt;!&ndash;    &lt;!&ndash;        app:layout_constraintBottom_toBottomOf="parent"&ndash;&gt;&ndash;&gt;-->
+    <!--    &lt;!&ndash;    &lt;!&ndash;        app:layout_constraintEnd_toEndOf="parent"&ndash;&gt;&ndash;&gt;-->
+    <!--    &lt;!&ndash;    &lt;!&ndash;        app:layout_constraintStart_toStartOf="parent"&ndash;&gt;&ndash;&gt;-->
+    <!--    &lt;!&ndash;    &lt;!&ndash;        app:layout_constraintTop_toBottomOf="@+id/dot4"&ndash;&gt;&ndash;&gt;-->
+    <!--    &lt;!&ndash;    &lt;!&ndash;        app:layout_constraintHorizontal_bias="1.0"&ndash;&gt;&ndash;&gt;-->
+    <!--    &lt;!&ndash;    &lt;!&ndash;        app:layout_constraintVertical_bias="1.0" />&ndash;&gt;&ndash;&gt;-->
+
+
+
+
+    <!--    &lt;!&ndash;</androidx.constraintlayout.widget.ConstraintLayout>&ndash;&gt;-->

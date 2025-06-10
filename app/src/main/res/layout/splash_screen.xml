@@ -1,0 +1,35 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/splashroot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="#FFFFFF">
+
+    <View
+        android:id="@+id/boxshape"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginLeft="25dp"
+        android:background="@drawable/rounded_box"
+        android:visibility="invisible" />
+
+
+    <View
+        android:id="@+id/ovalShape"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="35dp"
+        android:background="@drawable/rounded_circle"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/logotext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Vipayee"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display3"
+        android:textColor="#FFF9F9"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:visibility="invisible" />
+</RelativeLayout>

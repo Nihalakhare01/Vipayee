@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:gravity="center"
+    android:background="@color/white">
+
+    <!-- Payment Details TextView -->
+    <TextView
+        android:id="@+id/paymentDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:padding="10dp"
+        android:text="Payment Details will be shown here"
+        android:gravity="center"/>
+
+    <!-- Proceed to Pay Button -->
+    <Button
+        android:id="@+id/payButton"
+        android:textColor="@color/black"
+        android:backgroundTint="@color/yellow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Proceed to Pay"
+        android:layout_marginTop="20dp"/>
+
+</LinearLayout>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:id="@+id/payment_name"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:background="#FFFFFF"
+android:padding="16dp"
+    >
+
+<!-- Payment Details -->
+<TextView
+    android:id="@+id/payment_details"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Payment\nDetails"
+    android:textColor="#000000"
+    android:textSize="40sp"
+    android:textStyle="bold"
+    android:layout_marginTop="40dp"
+    android:layout_alignParentStart="true"
+    android:layout_marginStart="24dp" />
+
+<!-- Image -->
+<ImageView
+    android:id="@+id/image_3"
+    android:layout_width="130dp"
+    android:layout_height="146dp"
+    android:layout_below="@id/payment_details"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="40dp"
+    android:scaleType="centerCrop"
+    android:src="@drawable/img" />
+
+<!-- Paying Label -->
+
+<!-- Name Input -->
+
+
+<!-- Amount Input -->
+
+<!-- Pay Button -->
+
+<TextView
+    android:id="@+id/paying_label"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/image_3"
+    android:layout_marginStart="39dp"
+    android:layout_marginTop="96dp"
+    android:text="Paying"
+    android:textColor="#000000"
+    android:textSize="22sp"
+    android:textStyle="bold" />
+
+<EditText
+    android:id="@+id/payeeNameText"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:layout_marginStart="40dp"
+    android:layout_marginTop="461dp"
+    android:layout_marginEnd="40dp"
+    android:background="@drawable/input_box_border"
+
+    android:padding="16dp"
+    android:textColor="#1E232C"
+    android:textColorHint="#8E8E93"
+    android:textSize="16sp" />
+
+<EditText
+    android:id="@+id/amountField"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:layout_marginStart="40dp"
+    android:layout_marginTop="543dp"
+    android:layout_marginEnd="40dp"
+    android:background="@drawable/input_box_border"
+    android:hint="₹ Amount"
+    android:inputType="numberDecimal"
+    android:padding="16dp"
+    android:textColor="#1E232C"
+    android:textColorHint="#8E8E93"
+    android:textSize="16sp" />
+
+
+    <Button
+        android:id="@+id/payButton"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:layout_below="@id/amountField"
+        android:layout_marginTop="40dp"
+        android:backgroundTint="#FFEA00"
+        android:text="Pay"
+        android:layout_marginStart="40dp"
+        android:textColor="#333333"
+        android:textSize="24sp" />
+
+</RelativeLayout>

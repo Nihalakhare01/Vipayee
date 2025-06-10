@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context=".MainActivity">
+
+    <!-- Header -->
+    <TextView
+        android:id="@+id/header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Select"
+        android:textColor="@android:color/black"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5" />
+
+    <!-- Scan QR Block -->
+
+    <!-- Phone Number Block -->
+
+    <!-- Generate QR Block -->
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/container_scan_qr"
+        android:layout_width="300dp"
+        android:layout_height="180dp"
+        android:layout_marginTop="48dp"
+        android:background="@drawable/input_box_border"
+        android:backgroundTint="@color/yellow"
+        android:elevation="4dp"
+        android:padding="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header">
+
+        <TextView
+            android:id="@+id/label_scan_qr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Scan QR"
+            android:textColor="#000"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/instruction_scan_qr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Swipe Right"
+            android:textColor="#000"
+            android:textSize="18sp"
+            android:textStyle="italic"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/label_scan_qr" />
+
+        <ImageView
+            android:id="@+id/icon_scan_qr"
+            android:layout_width="63dp"
+            android:layout_height="62dp"
+            android:background="@drawable/input_box_border2"
+            android:padding="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/instruction_scan_qr"
+            app:srcCompat="@drawable/scanqr" />
+
+        <ImageView
+            android:id="@+id/icon_swipe_right"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="37dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/swipe_right" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/container_phone_number"
+        android:layout_width="300dp"
+        android:layout_height="180dp"
+        android:layout_marginTop="72dp"
+        android:background="@drawable/input_box_border"
+        android:backgroundTint="@color/yellow"
+        android:elevation="4dp"
+        android:padding="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/container_scan_qr">
+
+        <TextView
+            android:id="@+id/label_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Phone Number"
+            android:textColor="#000"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/instruction_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Swipe Left"
+            android:textColor="#000"
+            android:textSize="18sp"
+            android:textStyle="italic"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/label_phone" />
+
+        <ImageView
+            android:id="@+id/icon_phone"
+            android:layout_width="63dp"
+            android:layout_height="62dp"
+            android:background="@drawable/input_box_border2"
+            android:padding="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/instruction_phone"
+            app:srcCompat="@drawable/phone" />
+
+        <ImageView
+            android:id="@+id/icon_swipe_left"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="37dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/swipe_left" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/container_generate_qr"
+        android:layout_width="300dp"
+        android:layout_height="180dp"
+        android:layout_marginTop="76dp"
+        android:background="@drawable/input_box_border"
+        android:backgroundTint="@color/yellow"
+        android:elevation="4dp"
+        android:padding="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/container_phone_number">
+
+        <TextView
+            android:id="@+id/label_generate_qr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Generate QR"
+            android:textColor="#000"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/instruction_generate_qr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Swipe Up"
+            android:textColor="#000"
+            android:textSize="18sp"
+            android:textStyle="italic"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/label_generate_qr" />
+
+        <ImageView
+            android:id="@+id/icon_generate_qr"
+            android:layout_width="63dp"
+            android:layout_height="62dp"
+            android:background="@drawable/input_box_border2"
+            android:padding="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/instruction_generate_qr"
+            app:srcCompat="@drawable/genqr" />
+
+        <ImageView
+            android:id="@+id/icon_swipe_up"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="37dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/swipe_up" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

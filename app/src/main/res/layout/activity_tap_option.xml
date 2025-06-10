@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:padding="16dp">
+
+    <!-- Title -->
+
+    <!-- Yellow Box (Biometric Box) -->
+
+    <!-- Grey Box (Braille Box) -->
+    <TextView
+        android:id="@+id/loginTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="36dp"
+        android:text="Login to Your\nAccount"
+        android:textColor="@android:color/black"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/yellowBox"
+        android:backgroundTint="@color/yellow"
+        android:layout_width="284dp"
+        android:layout_height="166dp"
+        android:layout_marginTop="76dp"
+        android:gravity="center"
+        android:background="@drawable/input_box_border"
+
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/loginTitle">
+
+        <!-- Image -->
+        <ImageView
+            android:id="@+id/biometricImage"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginBottom="8dp"
+            android:backgroundTint="@color/white"
+            android:background="@drawable/input_box_border2"
+
+            android:elevation="4dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/hand" />
+
+        <!-- Biometric Text -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Single Tap"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Biometric"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:textSize="32sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/greyBox"
+        android:backgroundTint="@color/yellow"
+        android:background="@drawable/input_box_border"
+
+        android:layout_width="285dp"
+        android:layout_height="167dp"
+        android:layout_marginTop="92dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/yellowBox">
+
+        <!-- Image -->
+        <ImageView
+            android:id="@+id/brailleImage"
+            android:backgroundTint="@color/white"
+            android:background="@drawable/input_box_border2"
+
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginBottom="8dp"
+            android:elevation="4dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/hand" />
+
+        <!-- Braille Text -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Double Tap"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Braille Keypad"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:textSize="32sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!--<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+    <!--    xmlns:tools="http://schemas.android.com/tools"-->
+    <!--    android:layout_width="match_parent"-->
+    <!--    android:layout_height="match_parent"-->
+    <!--    android:background="@drawable/rupee">-->
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/textView"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="Single Tap for Biometric authentication\n\nDouble Tap For Numeric Authentication\n"-->
+    <!--        android:textAlignment="center"-->
+    <!--        android:textSize="20dp"-->
+    <!--        android:textColor="#23486A"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintHorizontal_bias="0.493"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent"-->
+    <!--        app:layout_constraintVertical_bias="0.6" />-->
+    <!--</androidx.constraintlayout.widget.ConstraintLayout>-->
